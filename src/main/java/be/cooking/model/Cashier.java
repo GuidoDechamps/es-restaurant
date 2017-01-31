@@ -17,7 +17,11 @@ public class Cashier implements HandleOrder {
     private void calculate() {
         System.out.println("Receiving money..");
         sleep();
-        System.out.println("Order " + nrOfOrders++ + " PAID");
+        System.out.println("Order " + ++nrOfOrders + " PAID");
+    }
+
+    public int getNrOfOrdersProcessed() {
+        return nrOfOrders;
     }
 
     private void sleep() {
