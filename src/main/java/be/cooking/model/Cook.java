@@ -6,13 +6,14 @@ import java.util.stream.Collectors;
 
 public class Cook implements HandleOrder {
 
-    private static final int COOK_TIME = 1000;
+    private final int cookTime;
     private final HandleOrder next;
     private final String name;
 
-    public Cook(HandleOrder next, String name) {
+    public Cook(HandleOrder next, String name, int cookTime) {
         this.next = next;
         this.name = name;
+        this.cookTime = cookTime;
     }
 
     public void handle(Order order) {
@@ -23,8 +24,8 @@ public class Cook implements HandleOrder {
     private void cook(Order order) {
         System.out.println(name + " is cooking..");
         final String ingredients = buildIngredients(order);
-        order.addCookInfo(COOK_TIME, ingredients);
-        Sleep.sleep(COOK_TIME);
+        order.addCookInfo(cookTime, ingredients);
+        Sleep.sleep(cookTime);
         System.out.println(name + " is done cooking");
     }
 

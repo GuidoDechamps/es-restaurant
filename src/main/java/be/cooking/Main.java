@@ -14,9 +14,9 @@ public class Main {
         final Cashier cashier1 = new Cashier(orderPrinter);
         final ThreadedHandler cashier = createActor("MoneyMan", cashier1);
         final ThreadedHandler manager = createActor("Manager", new Manager(cashier));
-        final ThreadedHandler koen = createActor("Cook Koen", new Cook(manager, "Koen"));
-        final ThreadedHandler guido = createActor("Cook Guido", new Cook(manager, "Guido"));
-        final ThreadedHandler greg = createActor("Cook Greg", new Cook(manager, "Greg"));
+        final ThreadedHandler koen = createActor("Cook Koen", new Cook(manager, "Koen", 350));
+        final ThreadedHandler guido = createActor("Cook Guido", new Cook(manager, "Guido", 200));
+        final ThreadedHandler greg = createActor("Cook Greg", new Cook(manager, "Greg", 600));
         final RoundRobin repeater = RoundRobin.newBuilder()
                 .withHandler(koen)
                 .withHandler(guido)
