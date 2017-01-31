@@ -6,9 +6,11 @@ public class Cook implements HandleOrder {
 
     private static final int COOK_TIME = 2000;
     private final HandleOrder next;
+    private final String name;
 
-    public Cook(HandleOrder next) {
+    public Cook(HandleOrder next, String name) {
         this.next = next;
+        this.name = name;
     }
 
     public void handle(Order order) {
@@ -17,11 +19,11 @@ public class Cook implements HandleOrder {
     }
 
     private void cook(Order order) {
-        System.out.println("Cooking..");
+        System.out.println(name+ " is cooking..");
         final String ingredients = buildIngredients(order);
         order.addCookInfo(COOK_TIME, ingredients);
         sleep();
-        System.out.println("Cooking done");
+        System.out.println(name + " is done cooking");
     }
 
     private String buildIngredients(Order order) {

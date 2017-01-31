@@ -16,7 +16,7 @@ public class Main {
 
     private static void takeOrders(Waiter waiter) {
 //        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
-            waiter.takeOrder(1);
+        waiter.takeOrder(1);
 //        }
     }
 
@@ -24,8 +24,12 @@ public class Main {
         final OrderPrinter orderPrinter = new OrderPrinter();
         final Cashier cashier = new Cashier(orderPrinter);
         final Manager manager = new Manager(cashier);
-        final Cook cook = new Cook(manager);
-        return new Waiter(cook);
+        final Repeater repeater = Repeater.newBuilder()
+                .withHandler(new Cook(manager, "Koen"))
+                .withHandler(new Cook(manager, "Guido"))
+                .withHandler(new Cook(manager, "Greg"))
+                .build();
+        return new Waiter(repeater);
     }
 
 
