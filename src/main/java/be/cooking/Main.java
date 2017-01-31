@@ -18,11 +18,15 @@ public class Main {
 
         waitUntilAllOrdersAreDone(context.cashier, context.threadedHandlers);
         context.threadedHandlers.forEach(ThreadedHandler::stop);
+        printStatusReport(context);
+    }
+
+    private static void printStatusReport(Context context) {
+        context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
     }
 
     private static void waitUntilAllOrdersAreDone(Cashier cashier, List<ThreadedHandler> threadedHandlers) {
         while (cashier.getNrOfOrdersProcessed() != NR_OF_ORDERS_TAKEN) {
-            threadedHandlers.forEach(Main::print);
             Sleep.sleep(200);
         }
     }
