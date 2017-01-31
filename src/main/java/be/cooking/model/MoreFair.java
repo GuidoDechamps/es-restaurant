@@ -3,10 +3,10 @@ package be.cooking.model;
 import be.cooking.Sleep;
 
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 
 public class MoreFair implements HandleOrder {
-    private final List<ThreadedHandler> handlers;
+    private final Queue<ThreadedHandler> handlers;
 
     private MoreFair(Builder builder) {
         handlers = builder.handlers;
@@ -20,17 +20,21 @@ public class MoreFair implements HandleOrder {
     public void handle(Order order) {
 
         while (true) {
+
             for (ThreadedHandler handler : handlers) {
-                if (handleSingle(order, handler)) return;
+                if (handleSingle(order))
+                    return;
             }
 
             Sleep.sleep(1000);
         }
     }
 
-    private boolean handleSingle(Order order, ThreadedHandler handler) {
-        if (handler.size() < 5) {
-            handler.handle(order);
+    private boolean handleSingle(Order order) {
+        ThreadedHandler peek = handlers.peek();
+        if (peek.size() < 5) {
+            peek.handle(order);
+            handlers.add(handlers.remove());
             return true;
         }
         return false;
@@ -38,7 +42,7 @@ public class MoreFair implements HandleOrder {
 
 
     public static final class Builder {
-        private List<ThreadedHandler> handlers = new LinkedList<>();
+        private Queue<ThreadedHandler> handlers = new LinkedList<>();
 
         private Builder() {
         }
