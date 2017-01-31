@@ -8,7 +8,6 @@ public class Topic implements Publisher {
 
     private final EventMap eventMap = new EventMap();
 
-
     @Override
     public <T extends MessageBase> void publish(T message) {
         final List<Handler<T>> eventHandlers = eventMap.getEventHandlers(message);
