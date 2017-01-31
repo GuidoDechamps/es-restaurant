@@ -4,9 +4,20 @@ import be.cooking.model.*;
 
 public class Main {
 
+    private static final int NR_OF_ORDERS_TAKEN = 10;
+
     public static void main(String[] args) {
         final Waiter waiter = buildActors();
-        waiter.takeOrder();
+        long start = System.currentTimeMillis();
+        takeOrders(waiter);
+        long end = System.currentTimeMillis();
+        System.out.println("Processing " + NR_OF_ORDERS_TAKEN + " took " + (end - start) / 1000 + " seconds");
+    }
+
+    private static void takeOrders(Waiter waiter) {
+//        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
+            waiter.takeOrder(1);
+//        }
     }
 
     private static Waiter buildActors() {

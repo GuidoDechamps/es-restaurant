@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Order {
     private final UUID orderId;
     private int tableNumber;
-    private List<Item> items;
+    private List<ItemCode> items;
     private int subtotal;
     private int tax;
     private int total;
@@ -19,12 +19,12 @@ public class Order {
         orderId = builder.orderId;
         tableNumber = builder.tableNumber;
         items = builder.items;
-        subtotal = builder.subtotal;
-        tax = builder.tax;
-        total = builder.total;
-        cookTime = builder.cookTime;
-        ingredients = builder.ingredients;
-        paid = builder.paid;
+        subtotal = -1;
+        tax = -1;
+        total = -1;
+        cookTime = -1;
+        ingredients = "UNKNOWN";
+        paid = false;
     }
 
     public static Builder newBuilder() {
@@ -39,7 +39,7 @@ public class Order {
         return tableNumber;
     }
 
-    public List<Item> getItems() {
+    public List<ItemCode> getItems() {
         return items;
     }
 
@@ -77,16 +77,17 @@ public class Order {
                 '}';
     }
 
+    public void addCookInfo(int cookTime, String ingredients) {
+        this.cookTime = cookTime;
+        this.ingredients = ingredients;
+        this.ingredients = ingredients;
+    }
+
     public static final class Builder {
         private UUID orderId = UUID.randomUUID();
         private int tableNumber;
-        private List<Item> items = new ArrayList<>();
-        private int subtotal;
-        private int tax;
-        private int total;
-        private int cookTime;
-        private String ingredients;
-        private boolean paid=false;
+        private List<ItemCode> items = new ArrayList<>();
+        private boolean paid = false;
 
         private Builder() {
         }
@@ -97,58 +98,22 @@ public class Order {
             return this;
         }
 
-        public Builder withItems(List<Item> val) {
-            items = val;
-            return this;
-        }
 
-        public Builder addItems(List<Item> val) {
+        public Builder addItems(List<ItemCode> val) {
             items.addAll(val);
             return this;
         }
 
-        public Builder addItem(Item val) {
+        public Builder addItem(ItemCode val) {
             items.add(val);
             return this;
         }
 
-        public Builder withSubtotal(int val) {
-            subtotal = val;
-            return this;
-        }
-
-        public Builder withTax(int val) {
-            tax = val;
-            return this;
-        }
-
-        public Builder withTotal(int val) {
-            total = val;
-            return this;
-        }
-
-        public Builder withCookTime(int val) {
-            cookTime = val;
-            return this;
-        }
-
-        public Builder withIngredients(String val) {
-            ingredients = val;
-            return this;
-        }
-
-        public Builder withPaid(boolean val) {
-            paid = val;
-            return this;
-        }
 
         public Order build() {
             return new Order(this);
         }
 
-        public Builder withOrderId(UUID val) {
-            orderId = val;
-            return this;
-        }
+
     }
 }
