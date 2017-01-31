@@ -4,7 +4,7 @@ import be.cooking.model.*;
 
 public class Main {
 
-    private static final int NR_OF_ORDERS_TAKEN = 10;
+    private static final int NR_OF_ORDERS_TAKEN = 100;
 
     public static void main(String[] args) {
         final OrderPrinter orderPrinter = new OrderPrinter();
@@ -15,20 +15,24 @@ public class Main {
                 .withHandler(new Cook(manager, "Guido"))
                 .withHandler(new Cook(manager, "Greg"))
                 .build();
-        final ThreadedHandler threadedHandler = new ThreadedHandler(repeater);
+        final ThreadedHandler threadedHandler = new ThreadedHandler("HandlerBob",repeater);
         final Waiter waiter = new Waiter(threadedHandler);
 
         threadedHandler.start();
 
         startWorking(waiter);
 
-        waitUntilAllOrdersAreDone(cashier);
+        waitUntilAllOrdersAreDone(cashier, threadedHandler);
         threadedHandler.stop();
+
+
     }
 
-    private static void waitUntilAllOrdersAreDone(Cashier cashier) {
-        while (cashier.getNrOfOrdersProcessed() != NR_OF_ORDERS_TAKEN)
-            Sleep.sleep(10);
+    private static void waitUntilAllOrdersAreDone(Cashier cashier, ThreadedHandler threadedHandler) {
+        while (cashier.getNrOfOrdersProcessed() != NR_OF_ORDERS_TAKEN) {
+            System.out.println("Queue size = " + threadedHandler.size());
+            Sleep.sleep(200);
+        }
     }
 
     private static void startWorking(Waiter waiter) {

@@ -9,10 +9,12 @@ public class ThreadedHandler implements HandleOrder, Startable {
     private final Queue<Order> orders = new LinkedList();
     private final HandleOrder handler;
     private final Thread thread;
+    private final String name;
     private boolean keepRunning = true;
 
-    public ThreadedHandler(HandleOrder handler) {
+    public ThreadedHandler(String name, HandleOrder handler) {
         this.handler = handler;
+        this.name = name;
         thread = new Thread(this::handleExistingOrders);
     }
 
@@ -21,6 +23,13 @@ public class ThreadedHandler implements HandleOrder, Startable {
         orders.add(order);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int size() {
+        return orders.size();
+    }
 
     @Override
     public void start() {
