@@ -42,14 +42,14 @@ public class ThreadedHandler implements HandleOrder, Startable {
     }
 
     private void handleExistingOrders() {
-        System.out.println("In my thread");
+        System.out.println("Started thread " + name);
         while (keepRunning) {
             if (orders.size() > 0)
                 handler.handle(orders.remove());
             else
                 Sleep.sleep(10);
         }
-        System.out.println("Time to go home");
+        System.out.println("Thread " + name + " is stopped.");
     }
 
 }
