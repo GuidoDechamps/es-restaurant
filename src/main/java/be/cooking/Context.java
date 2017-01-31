@@ -59,7 +59,7 @@ class Context {
         topic.subscribe(Topics.PRICE_CALCULATED, threadCashier);
         topic.subscribe(Topics.PAYMENT_DONE, orderPrinter);
         topic.subscribe(Topics.FOOD_READY, manager);
-        topic.subscribe(Topics.ORDER_PLACED, bobTheDistributer);
+      //  topic.subscribe(Topics.ORDER_PLACED, bobTheDistributer);
     }
 
 }

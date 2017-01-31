@@ -1,6 +1,7 @@
 package be.cooking.model;
 
 import be.cooking.Repository;
+import be.cooking.model.messages.OrderPlaced;
 
 import java.util.Random;
 import java.util.UUID;
@@ -20,7 +21,9 @@ public class Waiter {
         final Order order = buildRandomOrder(tableNumber);
         System.out.println("Taking Order.." + order);
         orderRepository.save(order);
-        publisher.publish(Topics.ORDER_PLACED,order);
+
+        publisher.publish(new OrderPlaced(order));
+
         return order.getOrderUUID();
     }
 

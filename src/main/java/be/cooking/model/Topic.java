@@ -1,5 +1,7 @@
 package be.cooking.model;
 
+import be.cooking.model.messages.MessageBase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,11 @@ public class Topic implements Publisher {
     public void publish(String topic, Order order) {
         final List<HandleOrder> handleOrders = topicSubscriptions.get(topic);
         handleOrders.forEach(x -> x.handle(order));
+    }
+
+    @Override
+    public void publish(MessageBase message) {
+
     }
 
     public void subscribe(String topic, HandleOrder orderhandler) {
