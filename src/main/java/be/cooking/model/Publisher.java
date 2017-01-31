@@ -6,5 +6,5 @@ public interface Publisher {
 
     void publish(String topic, Order order);
 
-    void publish(MessageBase message);
+    <T extends MessageBase> void publish(T message);
 }
