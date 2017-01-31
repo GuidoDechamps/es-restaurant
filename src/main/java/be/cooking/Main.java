@@ -15,16 +15,16 @@ public class Main {
     }
 
     private static void takeOrders(Waiter waiter) {
-//        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
-        waiter.takeOrder(1);
-//        }
+        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
+            waiter.takeOrder(1);
+        }
     }
 
     private static Waiter buildActors() {
         final OrderPrinter orderPrinter = new OrderPrinter();
         final Cashier cashier = new Cashier(orderPrinter);
         final Manager manager = new Manager(cashier);
-        final Repeater repeater = Repeater.newBuilder()
+        final RoundRobin repeater = RoundRobin.newBuilder()
                 .withHandler(new Cook(manager, "Koen"))
                 .withHandler(new Cook(manager, "Guido"))
                 .withHandler(new Cook(manager, "Greg"))

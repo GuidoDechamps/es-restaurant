@@ -21,7 +21,7 @@ public class Manager implements HandleOrder {
 
     private void sleep() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
