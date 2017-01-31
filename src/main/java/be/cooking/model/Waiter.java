@@ -11,8 +11,12 @@ public class Waiter {
     }
 
     public UUID takeOrder() {
+
+        System.out.println("Taking Order..");
         final Order order = buildOrder();
+        System.out.println("Taking Order done");
         handler.handle(order);
+
         return order.getOrderUUID();
     }
 
