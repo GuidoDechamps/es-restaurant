@@ -30,7 +30,7 @@ public class Main {
 
     private static void waitUntilAllOrdersAreDone(Cashier cashier, ThreadedHandler threadedHandler) {
         while (cashier.getNrOfOrdersProcessed() != NR_OF_ORDERS_TAKEN) {
-            System.out.println("Queue size = " + threadedHandler.size());
+            System.out.println("Queue "+threadedHandler.getName() + " size = " + threadedHandler.size());
             Sleep.sleep(200);
         }
     }
