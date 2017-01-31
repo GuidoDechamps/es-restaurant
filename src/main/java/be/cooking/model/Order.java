@@ -29,7 +29,7 @@ public class Order {
         return new Builder();
     }
 
-    public UUID getOrderId() {
+    public UUID getOrderUUID() {
         return orderId;
     }
 
