@@ -99,6 +99,11 @@ public class Order {
             return this;
         }
 
+        public Builder addItem(Item val) {
+            items.add(val);
+            return this;
+        }
+
         public Builder withSubtotal(int val) {
             subtotal = val;
             return this;

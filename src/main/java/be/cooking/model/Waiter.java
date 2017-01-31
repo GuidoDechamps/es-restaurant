@@ -10,8 +10,22 @@ public class Waiter {
         this.handler = handler;
     }
 
-    public UUID placeOrder(Order order) {
+    public UUID takeOrder() {
+        final Order order = buildOrder();
         handler.handle(order);
         return order.getOrderUUID();
+    }
+
+    private static Order buildOrder() {
+        return Order.newBuilder()
+                .withCookTime(12)
+                .withIngredients("ingredienten")
+                .withSubtotal(456)
+                .withTableNumber(4)
+                .withTax(4)
+                .addItem(new Item("Jupiler"))
+                .addItem(new Item("Frietje"))
+                .addItem(new Item("Bitterballen"))
+                .build();
     }
 }
