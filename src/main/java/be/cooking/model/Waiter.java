@@ -8,11 +8,11 @@ import java.util.UUID;
 public class Waiter {
 
     private static final Random RANDOM = new Random();
-    private final HandleOrder handler;
     private Repository<Order> orderRepository;
+    private final Publisher publisher;
 
-    public Waiter(HandleOrder handler, Repository<Order> orderRepository) {
-        this.handler = handler;
+    public Waiter(Publisher publisher, Repository<Order> orderRepository) {
+        this.publisher = publisher;
         this.orderRepository = orderRepository;
     }
 
@@ -20,7 +20,7 @@ public class Waiter {
         final Order order = buildRandomOrder(tableNumber);
         System.out.println("Taking Order.." + order);
         orderRepository.save(order);
-        handler.handle(order);
+        publisher.publish(Topics.ORDER_PLACED,order);
         return order.getOrderUUID();
     }
 
@@ -48,7 +48,7 @@ public class Waiter {
                 .addItem(ItemCode.JUPILER)
                 .addItem(ItemCode.FRIETEN)
                 .addItem(ItemCode.BITTER_BALLEN)
-                .addTimeToLive(200)
+                .addTimeToLive(5000)
                 .build();
     }
 
@@ -57,7 +57,7 @@ public class Waiter {
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.WINE)
                 .addItem(ItemCode.STEAK)
-                .addTimeToLive(400)
+                .addTimeToLive(4500)
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class Waiter {
         return Order.newBuilder()
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.SOEP)
-                .addTimeToLive(350)
+                .addTimeToLive(5500)
                 .build();
     }
 
@@ -73,7 +73,7 @@ public class Waiter {
         return Order.newBuilder()
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.SPAGHETTI)
-                .addTimeToLive(450)
+                .addTimeToLive(5000)
                 .build();
     }
 }

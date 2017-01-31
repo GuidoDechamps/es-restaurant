@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 public class Cook implements HandleOrder {
 
     private final int cookTime;
-    private final HandleOrder next;
+    private final Publisher publisher;
     private final String name;
     private int count;
 
-    public Cook(HandleOrder next, String name, int cookTime) {
-        this.next = next;
+    public Cook(Publisher publisher, String name, int cookTime) {
+        this.publisher = publisher;
         this.name = name;
         this.count = 0;
         this.cookTime = cookTime;
@@ -20,7 +20,7 @@ public class Cook implements HandleOrder {
 
     public void handle(Order order) {
         cook(order);
-        next.handle(order);
+        publisher.publish(Topics.FOOD_READY, order);
     }
 
     private void cook(Order order) {

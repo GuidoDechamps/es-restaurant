@@ -2,16 +2,16 @@ package be.cooking.model;
 
 public class Cashier implements HandleOrder {
 
-    private final HandleOrder next;
+    private final Publisher publisher;
     private int nrOfOrders = 0;
 
-    public Cashier(HandleOrder next) {
-        this.next = next;
+    public Cashier(Publisher next) {
+        this.publisher = next;
     }
 
     public void handle(Order order) {
         calculate(order);
-        next.handle(order);
+        publisher.publish(Topics.PAYMENT_DONE,order);
     }
 
     private void calculate(Order order) {

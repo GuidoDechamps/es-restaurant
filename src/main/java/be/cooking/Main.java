@@ -4,14 +4,16 @@ import be.cooking.model.Order;
 import be.cooking.model.ThreadedHandler;
 import be.cooking.model.Waiter;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.summingInt;
+
 public class Main {
 
     private static final int NR_OF_ORDERS_TAKEN = 100;
 
     public static void main(String[] args) {
-        final Context context = new Context();
-        context.threadedHandlers.forEach(ThreadedHandler::start);
-
+        final Context context = Context.create();
         startWorking(context.waiter);
 
         waitUntilAllOrdersAreDone(context);
