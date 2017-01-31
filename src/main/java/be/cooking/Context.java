@@ -12,14 +12,14 @@ class Context {
     final ThreadedHandler manager = createActor("Manager", new Manager(threadCashier));
     final ThreadedHandler koen = createActor("Cook Koen", new Cook(manager, "Koen",350));
     final ThreadedHandler guido = createActor("Cook Guido", new Cook(manager, "Guido",200));
-    final ThreadedHandler greg = createActor("Cook Greg", new Cook(manager, "Greg",600));
-    final RoundRobin repeater = RoundRobin.newBuilder()
+    final ThreadedHandler greg = createActor("Cook Greg", new Cook(manager, "Greg",6000));
+    final MoreFair cookers = MoreFair.newBuilder()
             .withHandler(koen)
             .withHandler(guido)
             .withHandler(greg)
             .build();
-    final ThreadedHandler threadedHandler = new ThreadedHandler("HandlerBob", repeater);
-    final Waiter waiter = new Waiter(repeater);
+    final ThreadedHandler threadedHandler = new ThreadedHandler("HandlerBob", cookers);
+    final Waiter waiter = new Waiter(cookers);
     final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, threadedHandler, koen, greg, guido);
 
     private static ThreadedHandler createActor(String name, HandleOrder handler) {
