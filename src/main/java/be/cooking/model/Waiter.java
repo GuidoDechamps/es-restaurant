@@ -43,6 +43,7 @@ public class Waiter {
                 .addItem(ItemCode.JUPILER)
                 .addItem(ItemCode.FRIETEN)
                 .addItem(ItemCode.BITTER_BALLEN)
+                .addTimeToLive(200)
                 .build();
     }
 
@@ -51,6 +52,7 @@ public class Waiter {
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.WINE)
                 .addItem(ItemCode.STEAK)
+                .addTimeToLive(400)
                 .build();
     }
 
@@ -58,6 +60,7 @@ public class Waiter {
         return Order.newBuilder()
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.SOEP)
+                .addTimeToLive(350)
                 .build();
     }
 
@@ -65,6 +68,7 @@ public class Waiter {
         return Order.newBuilder()
                 .withTableNumber(tableNumber)
                 .addItem(ItemCode.SPAGHETTI)
+                .addTimeToLive(450)
                 .build();
     }
 }

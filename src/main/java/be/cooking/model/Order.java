@@ -15,6 +15,9 @@ public class Order {
     private String ingredients;
     private boolean paid;
 
+    private long timestamp;
+    private long timeToLive;
+
     private Order(Builder builder) {
         orderId = builder.orderId;
         tableNumber = builder.tableNumber;
@@ -25,10 +28,16 @@ public class Order {
         cookTime = -1;
         ingredients = "UNKNOWN";
         paid = false;
+        timestamp = System.currentTimeMillis();
+        timeToLive = builder.timeToLive;
     }
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() - timestamp > timeToLive;
     }
 
     public UUID getOrderUUID() {
@@ -63,9 +72,12 @@ public class Order {
         return ingredients;
     }
 
-    public void payed()
-    {
+    public void payed() {
         this.paid = true;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 
     @Override
@@ -100,6 +112,7 @@ public class Order {
         private int tableNumber;
         private List<ItemCode> items = new ArrayList<>();
         private boolean paid = false;
+        private long timeToLive;
 
         private Builder() {
         }
@@ -121,6 +134,10 @@ public class Order {
             return this;
         }
 
+        public Builder addTimeToLive(long val) {
+            timeToLive = val;
+            return this;
+        }
 
         public Order build() {
             return new Order(this);
