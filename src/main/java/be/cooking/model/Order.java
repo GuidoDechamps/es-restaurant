@@ -63,7 +63,8 @@ public class Order {
         return ingredients;
     }
 
-    public void pay() {
+    public void payed()
+    {
         this.paid = true;
     }
 

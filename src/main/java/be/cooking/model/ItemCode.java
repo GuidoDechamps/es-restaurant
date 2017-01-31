@@ -5,11 +5,11 @@ public enum ItemCode {
     FRIETEN("Frietje"),
     BITTER_BALLEN("Bitterballen"),
     SOEP("Soep"),
-    STEAK("Steak");
+    STEAK("Steak"), WINE("RedRedWine"), SPAGHETTI("Spaghetti");
+
+    private final String name;
 
     ItemCode(String name) {
         this.name = name;
     }
-
-    private final String name;
 }

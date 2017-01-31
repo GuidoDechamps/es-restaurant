@@ -1,9 +1,11 @@
 package be.cooking.model;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class Waiter {
 
+    private static final Random RANDOM = new Random();
     private final HandleOrder handler;
 
     public Waiter(HandleOrder handler) {
@@ -18,7 +20,21 @@ public class Waiter {
     }
 
     private static Order buildRandomOrder(int tableNumber) {
-        return buildFrietOrder(tableNumber);
+        final int orderType = RANDOM.nextInt(5);
+        switch (orderType) {
+            case 0:
+                return buildFrietOrder(tableNumber);
+            case 1:
+                return buildSteakOrder(tableNumber);
+            case 2:
+                return buildSoepOrder(tableNumber);
+            case 3:
+                return buildFrietOrder(tableNumber);
+            case 4:
+                return buildSpaghettiOrder(tableNumber);
+            default:
+                throw new RuntimeException("Unmatch orderType " + orderType);
+        }
     }
 
     private static Order buildFrietOrder(int tableNumber) {
@@ -27,6 +43,28 @@ public class Waiter {
                 .addItem(ItemCode.JUPILER)
                 .addItem(ItemCode.FRIETEN)
                 .addItem(ItemCode.BITTER_BALLEN)
+                .build();
+    }
+
+    private static Order buildSteakOrder(int tableNumber) {
+        return Order.newBuilder()
+                .withTableNumber(tableNumber)
+                .addItem(ItemCode.WINE)
+                .addItem(ItemCode.STEAK)
+                .build();
+    }
+
+    private static Order buildSoepOrder(int tableNumber) {
+        return Order.newBuilder()
+                .withTableNumber(tableNumber)
+                .addItem(ItemCode.SOEP)
+                .build();
+    }
+
+    private static Order buildSpaghettiOrder(int tableNumber) {
+        return Order.newBuilder()
+                .withTableNumber(tableNumber)
+                .addItem(ItemCode.SPAGHETTI)
                 .build();
     }
 }

@@ -2,9 +2,11 @@ package be.cooking.model;
 
 public enum Item {
     JUPILER(ItemCode.JUPILER, "Bier"),
+    WINE(ItemCode.WINE, "Bottle"),
     FRIETEN(ItemCode.FRIETEN, Recipes.PATATEN),
     BITTER_BALLEN(ItemCode.BITTER_BALLEN, Recipes.MEAT_LEFT_OVERS),
     SOEP(ItemCode.SOEP, Recipes.GROETEN + " , " + Recipes.BOUILLON),
+    SPAGHETTI(ItemCode.SPAGHETTI, Recipes.PASTA + " , " + Recipes.GEHAKT),
     STEAK(ItemCode.STEAK, Recipes.STEAK);
     private final ItemCode itemCode;
     private final String ingredienten;
