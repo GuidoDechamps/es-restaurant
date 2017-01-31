@@ -1,8 +1,10 @@
 package be.cooking.model;
 
 import be.cooking.Sleep;
+import be.cooking.model.messages.OrderCooked;
+import be.cooking.model.messages.OrderPriced;
 
-public class Manager implements HandleOrder {
+public class Manager implements Handler<OrderCooked> {
 
     private final Publisher publisher;
 
@@ -10,16 +12,17 @@ public class Manager implements HandleOrder {
         this.publisher = publisher;
     }
 
-    public void handle(Order order) {
-        calculate(order);
-        publisher.publish(Topics.PRICE_CALCULATED, order);
+    public void handle(OrderCooked event) {
+        Order order = calculate(event.getOrder());
+        publisher.publish(new OrderPriced(order));
     }
 
-    private void calculate(Order order) {
+    private Order calculate(Order order) {
         System.out.println("Calculating..");
         order.addPrices(21, 121, 100);
         Sleep.sleep(1);
         System.out.println("Calculating done");
+        return order;
     }
 
 

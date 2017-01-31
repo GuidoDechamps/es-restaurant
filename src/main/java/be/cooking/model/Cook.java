@@ -1,10 +1,13 @@
 package be.cooking.model;
 
 import be.cooking.Sleep;
+import be.cooking.model.messages.OrderCooked;
+import be.cooking.model.messages.OrderPlaced;
+import be.cooking.model.messages.OrderPriced;
 
 import java.util.stream.Collectors;
 
-public class Cook implements HandleOrder {
+public class Cook implements Handler<OrderPlaced> {
 
     private final int cookTime;
     private final Publisher publisher;
@@ -18,18 +21,19 @@ public class Cook implements HandleOrder {
         this.cookTime = cookTime;
     }
 
-    public void handle(Order order) {
-        cook(order);
-        publisher.publish(Topics.FOOD_READY, order);
+    public void handle(OrderPlaced event) {
+        Order order = cook(event.getOrder());
+        publisher.publish(new OrderCooked(order));
     }
 
-    private void cook(Order order) {
+    private Order cook(Order order) {
         System.out.println(name + " is cooking his " + (++count) + "th order.");
         final String ingredients = buildIngredients(order);
         order.addCookInfo(cookTime, ingredients);
 
         Sleep.sleep(cookTime);
         System.out.println(name + " is done cooking");
+        return order;
     }
 
     public int getCount() {

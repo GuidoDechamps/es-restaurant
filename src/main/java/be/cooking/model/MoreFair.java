@@ -1,11 +1,13 @@
 package be.cooking.model;
 
+import be.cooking.model.messages.MessageBase;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
 import static be.cooking.Sleep.sleep;
 
-public class MoreFair implements HandleOrder {
+public class MoreFair<T extends MessageBase> implements Handler<T> {
     private static final int SLEEP_TIME = 1000;
     private static final int MAX_QUEUE_SIZE = 5;
     private final Queue<ThreadedHandler> handlers;
@@ -19,27 +21,27 @@ public class MoreFair implements HandleOrder {
     }
 
     @Override
-    public void handle(Order order) {
+    public void handle(T message) {
         while (true) {
             for (int i = 0; i < handlers.size(); i++)
-                if (handleSingle(order))
+                if (handleSingle(message))
                     return;
             sleep(SLEEP_TIME);
         }
     }
 
-    private boolean handleSingle(Order order) {
+    private boolean handleSingle(T message) {
         final ThreadedHandler peek = handlers.peek();
         if (peek.size() < MAX_QUEUE_SIZE) {
-            return handleOrder(order, peek);
+            return handleOrder(message, peek);
         } else {
             moveFirstToLastPlaceInQueue();
             return false;
         }
     }
 
-    private boolean handleOrder(Order order, ThreadedHandler handler) {
-        handler.handle(order);
+    private boolean handleOrder(T message, ThreadedHandler handler) {
+        handler.handle(message);
         moveFirstToLastPlaceInQueue();
         return true;
     }

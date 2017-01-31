@@ -1,6 +1,7 @@
 package be.cooking;
 
 import be.cooking.model.*;
+import be.cooking.model.messages.MessageBase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,14 +52,14 @@ class Context {
         context.threadedHandlers.forEach(ThreadedHandler::start);
     }
 
-    private static ThreadedHandler createActor(String name, HandleOrder handler) {
+    private static ThreadedHandler createActor(String name, Handler<? extends MessageBase> handler) {
         return new ThreadedHandler(name, handler);
     }
 
     private void wire() {
-        topic.subscribe(Topics.PRICE_CALCULATED, threadCashier);
-        topic.subscribe(Topics.PAYMENT_DONE, orderPrinter);
-        topic.subscribe(Topics.FOOD_READY, manager);
+       // topic.subscribe(Topics.PRICE_CALCULATED, threadCashier);
+       // topic.subscribe(Topics.PAYMENT_DONE, orderPrinter);
+      //  topic.subscribe(Topics.FOOD_READY, manager);
       //  topic.subscribe(Topics.ORDER_PLACED, bobTheDistributer);
     }
 

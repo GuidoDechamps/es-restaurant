@@ -1,8 +1,10 @@
 package be.cooking.model;
 
-public class OrderPrinter implements HandleOrder {
+import be.cooking.model.messages.OrderPaid;
+
+public class OrderPrinter implements Handler<OrderPaid> {
     @Override
-    public void handle(Order order) {
-        System.out.println("order : " + order);
+    public void handle(OrderPaid event) {
+        System.out.println("order : " + event.getOrder());
     }
 }

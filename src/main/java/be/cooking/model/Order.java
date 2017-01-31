@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Order {
+public class Order implements Expirable {
     private final UUID orderId;
     private int tableNumber;
     private List<ItemCode> items;
@@ -36,6 +36,7 @@ public class Order {
         return new Builder();
     }
 
+    @Override
     public boolean isExpired() {
         return System.currentTimeMillis() - timestamp > timeToLive;
     }
@@ -76,7 +77,8 @@ public class Order {
         this.status = Status.PAID;
     }
 
-    public void dropped() {
+    @Override
+    public void drop() {
         this.status = Status.DROPPED;
     }
 

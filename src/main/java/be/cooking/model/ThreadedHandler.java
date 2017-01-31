@@ -1,25 +1,26 @@
 package be.cooking.model;
 
 import be.cooking.Sleep;
+import be.cooking.model.messages.MessageBase;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ThreadedHandler implements HandleOrder, Startable {
-    private final Queue<Order> orders = new LinkedList();
-    private final HandleOrder handler;
+public class ThreadedHandler<T extends MessageBase> implements Handler<T>, Startable {
+    private final Queue<T> orders = new LinkedList();
+    private final Handler<T> handler;
     private final Thread thread;
     private final String name;
     private boolean keepRunning = true;
 
-    public ThreadedHandler(String name, HandleOrder handler) {
+    public ThreadedHandler(String name, Handler<T> handler) {
         this.handler = handler;
         this.name = name;
         thread = new Thread(this::handleExistingOrders);
     }
 
     @Override
-    public void handle(Order order) {
+    public void handle(T order) {
         orders.add(order);
     }
 

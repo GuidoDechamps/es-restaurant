@@ -27,6 +27,7 @@ public class Topic implements Publisher {
         topicSubscriptions.get(topic).add(orderhandler);
     }
 
+
     private void createTopic(String topic) {
         if (!topicSubscriptions.containsKey(topic))
             topicSubscriptions.put(topic, new ArrayList<>());

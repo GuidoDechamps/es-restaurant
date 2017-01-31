@@ -9,4 +9,8 @@ public class OrderPlaced extends MessageBase {
     public OrderPlaced(Order order) {
         this.order = order;
     }
+
+    public Order getOrder() {
+        return order;
+    }
 }

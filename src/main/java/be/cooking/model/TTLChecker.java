@@ -1,22 +1,28 @@
 package be.cooking.model;
 
-import be.cooking.model.HandleOrder;
-import be.cooking.model.Order;
 
-public class TTLChecker implements HandleOrder {
+import be.cooking.model.messages.MessageBase;
 
-    private HandleOrder handleOrder;
+public class TTLChecker<T extends MessageBase> implements Handler<T> {
 
-    public TTLChecker(HandleOrder handleOrder) {
-        this.handleOrder = handleOrder;
+    private Handler<T> handler;
+
+    public TTLChecker(Handler<T> handler) {
+        this.handler = handler;
     }
 
     @Override
-    public void handle(Order order) {
-        if (order.isExpired()) {
-            System.out.println("Drop order: " + order.getOrderUUID());
-            order.dropped();
-        } else
-            handleOrder.handle(order);
+    public void handle(T object) {
+
+        if (object instanceof Expirable) {
+            Expirable expirableObject = (Expirable) object;
+            if (expirableObject.isExpired()) {
+                System.out.println("Drop!");
+                expirableObject.drop();
+            } else
+                handler.handle(object);
+        }
+        else
+            handler.handle(object);
     }
 }
