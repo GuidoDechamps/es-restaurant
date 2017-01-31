@@ -1,12 +1,12 @@
 package be.cooking.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class Repeater implements HandleOrder {
-    private final List<HandleOrder> handlers;
+public class RoundRobin implements HandleOrder {
+    private final Queue<HandleOrder> handlers;
 
-    private Repeater(Builder builder) {
+    private RoundRobin(Builder builder) {
         handlers = builder.handlers;
     }
 
@@ -16,11 +16,12 @@ public class Repeater implements HandleOrder {
 
     @Override
     public void handle(Order order) {
-        handlers.forEach(x -> x.handle(order));
+        handlers.peek().handle(order);
+        handlers.add(handlers.remove());
     }
 
     public static final class Builder {
-        private List<HandleOrder> handlers = new ArrayList<>();
+        private Queue<HandleOrder> handlers = new LinkedList<>();
 
         private Builder() {
         }
@@ -30,8 +31,8 @@ public class Repeater implements HandleOrder {
             return this;
         }
 
-        public Repeater build() {
-            return new Repeater(this);
+        public RoundRobin build() {
+            return new RoundRobin(this);
         }
     }
 }

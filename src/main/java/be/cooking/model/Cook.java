@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 
 public class Cook implements HandleOrder {
 
-    private static final int COOK_TIME = 2000;
+    private static final int COOK_TIME = 2;
     private final HandleOrder next;
     private final String name;
 
