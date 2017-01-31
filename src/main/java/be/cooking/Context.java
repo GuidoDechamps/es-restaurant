@@ -1,7 +1,7 @@
 package be.cooking;
 
 import be.cooking.model.*;
-import be.cooking.model.messages.MessageBase;
+import be.cooking.model.messages.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,10 +57,10 @@ class Context {
     }
 
     private void wire() {
-       // topic.subscribe(Topics.PRICE_CALCULATED, threadCashier);
-       // topic.subscribe(Topics.PAYMENT_DONE, orderPrinter);
-      //  topic.subscribe(Topics.FOOD_READY, manager);
-      //  topic.subscribe(Topics.ORDER_PLACED, bobTheDistributer);
+        topic.subscribe(OrderPriced.class, threadCashier);
+        topic.subscribe(OrderPaid.class, orderPrinter);
+        topic.subscribe(OrderCooked.class, manager);
+        topic.subscribe(OrderPlaced.class, bobTheDistributer);
     }
 
 }

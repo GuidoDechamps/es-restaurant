@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ThreadedHandler<T extends MessageBase> implements Handler<T>, Startable {
-    private final Queue<T> messages = new LinkedList();
+    private final Queue<T> messages = new LinkedList<>();
     private final Handler<T> handler;
     private final Thread thread;
     private final String name;
