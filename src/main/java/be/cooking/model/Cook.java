@@ -1,5 +1,7 @@
 package be.cooking.model;
 
+import be.cooking.Sleep;
+
 import java.util.stream.Collectors;
 
 public class Cook implements HandleOrder {
@@ -19,22 +21,16 @@ public class Cook implements HandleOrder {
     }
 
     private void cook(Order order) {
-        System.out.println(name+ " is cooking..");
+        System.out.println(name + " is cooking..");
         final String ingredients = buildIngredients(order);
         order.addCookInfo(COOK_TIME, ingredients);
-        sleep();
+        Sleep.sleep(COOK_TIME);
         System.out.println(name + " is done cooking");
     }
 
     private String buildIngredients(Order order) {
-        return order.getItems().stream().map(Item::getItem).map( x -> x + " ").collect(Collectors.joining());
+        return order.getItems().stream().map(Item::getItem).map(x -> x + " ").collect(Collectors.joining());
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(COOK_TIME);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

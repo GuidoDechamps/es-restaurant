@@ -1,5 +1,7 @@
 package be.cooking.model;
 
+import be.cooking.Sleep;
+
 public class Manager implements HandleOrder {
 
     private final HandleOrder next;
@@ -9,21 +11,16 @@ public class Manager implements HandleOrder {
     }
 
     public void handle(Order order) {
-        calculate();
+        calculate(order);
         next.handle(order);
     }
 
-    private void calculate() {
+    private void calculate(Order order) {
         System.out.println("Calculating..");
-        sleep();
+        order.addPrices(21,121,100);
+        Sleep.sleep(1);
         System.out.println("Calculating done");
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }
