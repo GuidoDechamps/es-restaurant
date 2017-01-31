@@ -33,14 +33,14 @@ public class MoreFair<T extends MessageBase> implements Handler<T> {
     private boolean handleSingle(T message) {
         final ThreadedHandler peek = handlers.peek();
         if (peek.size() < MAX_QUEUE_SIZE) {
-            return handleOrder(message, peek);
+            return handleMessage(message, peek);
         } else {
             moveFirstToLastPlaceInQueue();
             return false;
         }
     }
 
-    private boolean handleOrder(T message, ThreadedHandler handler) {
+    private boolean handleMessage(T message, ThreadedHandler handler) {
         handler.handle(message);
         moveFirstToLastPlaceInQueue();
         return true;
