@@ -1,8 +1,9 @@
 package be.cooking;
 
-import be.cooking.model.*;
+import be.cooking.model.Cashier;
+import be.cooking.model.ThreadedHandler;
+import be.cooking.model.Waiter;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -10,30 +11,13 @@ public class Main {
     private static final int NR_OF_ORDERS_TAKEN = 100;
 
     public static void main(String[] args) {
-        final ThreadedHandler orderPrinter = createActor("Printer", new OrderPrinter());
-        final Cashier cashier1 = new Cashier(orderPrinter);
-        final ThreadedHandler cashier = createActor("MoneyMan", cashier1);
-        final ThreadedHandler manager = createActor("Manager", new Manager(cashier));
-        final ThreadedHandler koen = createActor("Cook Koen", new Cook(manager, "Koen", 350));
-        final ThreadedHandler guido = createActor("Cook Guido", new Cook(manager, "Guido", 200));
-        final ThreadedHandler greg = createActor("Cook Greg", new Cook(manager, "Greg", 600));
-        final RoundRobin repeater = RoundRobin.newBuilder()
-                .withHandler(koen)
-                .withHandler(guido)
-                .withHandler(greg)
-                .build();
-        final ThreadedHandler threadedHandler = new ThreadedHandler("HandlerBob", repeater);
-        final Waiter waiter = new Waiter(repeater);
-        final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, cashier, manager, threadedHandler, koen, greg, guido);
+        final Context context = new Context();
+        context.threadedHandlers.forEach(ThreadedHandler::start);
 
-        threadedHandlers.forEach(ThreadedHandler::start);
+        startWorking(context.waiter);
 
-        startWorking(waiter);
-
-        waitUntilAllOrdersAreDone(cashier1, threadedHandlers);
-        threadedHandler.stop();
-
-
+        waitUntilAllOrdersAreDone(context.cashier, context.threadedHandlers);
+        context.threadedHandlers.forEach(ThreadedHandler::stop);
     }
 
     private static void waitUntilAllOrdersAreDone(Cashier cashier, List<ThreadedHandler> threadedHandlers) {
@@ -58,10 +42,6 @@ public class Main {
         for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
             waiter.takeOrder(1);
         }
-    }
-
-    private static ThreadedHandler createActor(String name, HandleOrder handler) {
-        return new ThreadedHandler(name, handler);
     }
 
 
