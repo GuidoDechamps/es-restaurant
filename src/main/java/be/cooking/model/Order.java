@@ -61,6 +61,20 @@ public class Order {
         return ingredients;
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", tableNumber=" + tableNumber +
+                ", items=" + items +
+                ", subtotal=" + subtotal +
+                ", tax=" + tax +
+                ", total=" + total +
+                ", cookTime=" + cookTime +
+                ", ingredients='" + ingredients + '\'' +
+                '}';
+    }
+
     public static final class Builder {
         private UUID orderId = UUID.randomUUID();
         private int tableNumber;

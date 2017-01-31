@@ -1,7 +1,5 @@
 package be.cooking.model;
 
-import be.cooking.app.HandleOrder;
-
 import java.util.UUID;
 
 public class Waiter {
@@ -12,7 +10,7 @@ public class Waiter {
         this.handler = handler;
     }
 
-    UUID placeOrder(Order order) {
+    public UUID placeOrder(Order order) {
         handler.handle(order);
         return order.getOrderUUID();
     }

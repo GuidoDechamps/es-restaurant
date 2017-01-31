@@ -1,6 +1,4 @@
-package be.cooking.app;
-
-import be.cooking.model.Order;
+package be.cooking.model;
 
 public class OrderPrinter implements HandleOrder {
     @Override
