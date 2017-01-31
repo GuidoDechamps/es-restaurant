@@ -1,5 +1,6 @@
 .idea
 *.iws
+*.iml
 /out/
 .idea_modules/
 atlassian-ide-plugin.xml
