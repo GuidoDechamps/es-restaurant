@@ -39,9 +39,8 @@ public class Main {
     }
 
     private static void takeOrders(Waiter waiter) {
-        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++) {
+        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++)
             waiter.takeOrder(1);
-        }
     }
 
 
