@@ -1,9 +1,6 @@
 package be.cooking;
 
-import be.cooking.model.Cook;
-import be.cooking.model.Manager;
-import be.cooking.model.OrderPrinter;
-import be.cooking.model.Waiter;
+import be.cooking.model.*;
 
 public class Main {
 
@@ -14,8 +11,8 @@ public class Main {
 
     private static Waiter buildActors() {
         final OrderPrinter orderPrinter = new OrderPrinter();
-
-        final Manager manager  = new Manager(orderPrinter);
+        final Cashier cashier = new Cashier(orderPrinter);
+        final Manager manager = new Manager(cashier);
         final Cook cook = new Cook(manager);
         return new Waiter(cook);
     }

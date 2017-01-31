@@ -13,6 +13,7 @@ public class Order {
     private int total;
     private int cookTime;
     private String ingredients;
+    private boolean paid;
 
     private Order(Builder builder) {
         orderId = builder.orderId;
@@ -23,6 +24,7 @@ public class Order {
         total = builder.total;
         cookTime = builder.cookTime;
         ingredients = builder.ingredients;
+        paid = builder.paid;
     }
 
     public static Builder newBuilder() {
@@ -84,6 +86,7 @@ public class Order {
         private int total;
         private int cookTime;
         private String ingredients;
+        private boolean paid=false;
 
         private Builder() {
         }
@@ -91,6 +94,11 @@ public class Order {
 
         public Builder withTableNumber(int val) {
             tableNumber = val;
+            return this;
+        }
+
+        public Builder withItems(List<Item> val) {
+            items = val;
             return this;
         }
 
@@ -129,8 +137,18 @@ public class Order {
             return this;
         }
 
+        public Builder withPaid(boolean val) {
+            paid = val;
+            return this;
+        }
+
         public Order build() {
             return new Order(this);
+        }
+
+        public Builder withOrderId(UUID val) {
+            orderId = val;
+            return this;
         }
     }
 }
