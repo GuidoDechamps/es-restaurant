@@ -13,7 +13,7 @@ public class Cook implements HandleOrder {
         next.handle(order);
     }
 
-    private void cook() {
+    private void cook(Order order) {
         System.out.println("Cooking..");
         sleep();
         System.out.println("Cooking done");

@@ -11,22 +11,15 @@ public class Waiter {
     }
 
     public UUID takeOrder() {
-
-        System.out.println("Taking Order..");
         final Order order = buildOrder();
-        System.out.println("Taking Order done");
+        System.out.println("Taking Order.." + order);
         handler.handle(order);
-
         return order.getOrderUUID();
     }
 
     private static Order buildOrder() {
         return Order.newBuilder()
-                .withCookTime(12)
-                .withIngredients("ingredienten")
-                .withSubtotal(456)
                 .withTableNumber(4)
-                .withTax(4)
                 .addItem(new Item("Jupiler"))
                 .addItem(new Item("Frietje"))
                 .addItem(new Item("Bitterballen"))
