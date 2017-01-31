@@ -4,7 +4,10 @@ import be.cooking.model.Cashier;
 import be.cooking.model.ThreadedHandler;
 import be.cooking.model.Waiter;
 
+import java.util.IntSummaryStatistics;
 import java.util.List;
+
+import static java.util.stream.Collectors.summingInt;
 
 public class Main {
 
@@ -23,6 +26,7 @@ public class Main {
 
     private static void printStatusReport(Context context) {
         context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
+        System.out.println("Dropped orders: " + context.ttlCheckers.stream().map(x -> x.getDroppedOrders()).collect(summingInt(Integer::intValue)));
     }
 
     private static void waitUntilAllOrdersAreDone(Cashier cashier, List<ThreadedHandler> threadedHandlers) {

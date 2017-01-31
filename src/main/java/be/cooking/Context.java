@@ -10,12 +10,19 @@ class Context {
     final Cashier cashier = new Cashier(orderPrinter);
     final ThreadedHandler threadCashier = createActor("MoneyMan", cashier);
     final ThreadedHandler manager = createActor("Manager", new Manager(threadCashier));
+
     final Cook cookKoen = new Cook(manager, "Koen", 350);
-    final ThreadedHandler koen = createActor("Cook Koen", new TTLChecker(cookKoen));
+    final TTLChecker ttlCookKoen = new TTLChecker(cookKoen);
+    final ThreadedHandler koen = createActor("Cook Koen", ttlCookKoen);
+
     final Cook cookGuido = new Cook(manager, "Guido", 200);
-    final ThreadedHandler guido = createActor("Cook Guido", new TTLChecker(cookGuido));
+    final TTLChecker ttlCookGuido = new TTLChecker(cookGuido);
+    final ThreadedHandler guido = createActor("Cook Guido", ttlCookGuido);
+
     final Cook cookGreg = new Cook(manager, "Greg", 6000);
-    final ThreadedHandler greg = createActor("Cook Greg", new TTLChecker(cookGreg));
+    final TTLChecker ttlCookGreg = new TTLChecker(cookGreg);
+    final ThreadedHandler greg = createActor("Cook Greg", ttlCookGreg);
+
     final MoreFair cookers = MoreFair.newBuilder()
             .withHandler(koen)
             .withHandler(guido)
@@ -25,6 +32,7 @@ class Context {
     final Waiter waiter = new Waiter(cookers);
     final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, threadedHandler, koen, greg, guido);
     final List<Cook> cooks = Arrays.asList(cookGreg, cookGuido, cookKoen);
+    final List<TTLChecker> ttlCheckers = Arrays.asList(ttlCookGreg, ttlCookGuido, ttlCookKoen);
 
     private static ThreadedHandler createActor(String name, HandleOrder handler) {
         return new ThreadedHandler(name, handler);
