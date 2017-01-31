@@ -10,13 +10,14 @@ public class Cashier implements HandleOrder {
     }
 
     public void handle(Order order) {
-        calculate();
+        calculate(order);
         next.handle(order);
     }
 
-    private void calculate() {
+    private void calculate(Order order) {
         System.out.println("Receiving money..");
         sleep();
+        order.pay();
         System.out.println("Order " + ++nrOfOrders + " PAID");
     }
 

@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Order {
-    private final UUID orderId;
-    private int tableNumber;
-    private List<ItemCode> items;
-    private int subtotal;
-    private int tax;
-    private int total;
-    private int cookTime;
-    private String ingredients;
-    private boolean paid;
+public class Order
+{
+    private final UUID           orderId;
+    private       int            tableNumber;
+    private       List<ItemCode> items;
+    private       int            subtotal;
+    private       int            tax;
+    private       int            total;
+    private       int            cookTime;
+    private       String         ingredients;
+    private       boolean        paid;
 
-    private Order(Builder builder) {
+    private Order(Builder builder)
+    {
         orderId = builder.orderId;
         tableNumber = builder.tableNumber;
         items = builder.items;
@@ -27,44 +29,59 @@ public class Order {
         paid = false;
     }
 
-    public static Builder newBuilder() {
+    public static Builder newBuilder()
+    {
         return new Builder();
     }
 
-    public UUID getOrderUUID() {
+    public UUID getOrderUUID()
+    {
         return orderId;
     }
 
-    public int getTableNumber() {
+    public int getTableNumber()
+    {
         return tableNumber;
     }
 
-    public List<ItemCode> getItems() {
+    public List<ItemCode> getItems()
+    {
         return items;
     }
 
-    public int getSubtotal() {
+    public int getSubtotal()
+    {
         return subtotal;
     }
 
-    public int getTax() {
+    public int getTax()
+    {
         return tax;
     }
 
-    public int getTotal() {
+    public int getTotal()
+    {
         return total;
     }
 
-    public int getCookTime() {
+    public int getCookTime()
+    {
         return cookTime;
     }
 
-    public String getIngredients() {
+    public String getIngredients()
+    {
         return ingredients;
     }
 
+    public void pay()
+    {
+        this.paid = true;
+    }
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Order{" +
                 "orderId=" + orderId +
                 ", tableNumber=" + tableNumber +
@@ -74,46 +91,50 @@ public class Order {
                 ", total=" + total +
                 ", cookTime=" + cookTime +
                 ", ingredients='" + ingredients + '\'' +
+                ", paid=" + paid +
                 '}';
     }
 
-    public void addCookInfo(int cookTime, String ingredients) {
+    public void addCookInfo(int cookTime, String ingredients)
+    {
         this.cookTime = cookTime;
         this.ingredients = ingredients;
         this.ingredients = ingredients;
     }
 
-    public static final class Builder {
+    public static final class Builder
+    {
         private UUID orderId = UUID.randomUUID();
         private int tableNumber;
         private List<ItemCode> items = new ArrayList<>();
-        private boolean paid = false;
+        private boolean        paid  = false;
 
-        private Builder() {
+        private Builder()
+        {
         }
 
-
-        public Builder withTableNumber(int val) {
+        public Builder withTableNumber(int val)
+        {
             tableNumber = val;
             return this;
         }
 
-
-        public Builder addItems(List<ItemCode> val) {
+        public Builder addItems(List<ItemCode> val)
+        {
             items.addAll(val);
             return this;
         }
 
-        public Builder addItem(ItemCode val) {
+        public Builder addItem(ItemCode val)
+        {
             items.add(val);
             return this;
         }
 
-
-        public Order build() {
+        public Order build()
+        {
             return new Order(this);
         }
-
 
     }
 }
