@@ -1,13 +1,8 @@
 package be.cooking;
 
-import be.cooking.model.Cashier;
+import be.cooking.model.Order;
 import be.cooking.model.ThreadedHandler;
 import be.cooking.model.Waiter;
-
-import java.util.IntSummaryStatistics;
-import java.util.List;
-
-import static java.util.stream.Collectors.summingInt;
 
 public class Main {
 
@@ -19,18 +14,20 @@ public class Main {
 
         startWorking(context.waiter);
 
-        waitUntilAllOrdersAreDone(context.cashier, context.threadedHandlers);
+        waitUntilAllOrdersAreDone(context);
         context.threadedHandlers.forEach(ThreadedHandler::stop);
         printStatusReport(context);
     }
 
     private static void printStatusReport(Context context) {
         context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
-        System.out.println("Dropped orders: " + context.ttlCheckers.stream().map(x -> x.getDroppedOrders()).collect(summingInt(Integer::intValue)));
+        System.out.println("Dropped orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DROPPED).count());
+        System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.PAID).count());
+
     }
 
-    private static void waitUntilAllOrdersAreDone(Cashier cashier, List<ThreadedHandler> threadedHandlers) {
-        while (cashier.getNrOfOrdersProcessed() != NR_OF_ORDERS_TAKEN) {
+    private static void waitUntilAllOrdersAreDone(Context context) {
+        while (context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.IN_PROGRESS).count() > 0) {
             Sleep.sleep(200);
         }
     }

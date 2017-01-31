@@ -1,5 +1,7 @@
 package be.cooking.model;
 
+import be.cooking.Repository;
+
 import java.util.Random;
 import java.util.UUID;
 
@@ -7,14 +9,17 @@ public class Waiter {
 
     private static final Random RANDOM = new Random();
     private final HandleOrder handler;
+    private Repository<Order> orderRepository;
 
-    public Waiter(HandleOrder handler) {
+    public Waiter(HandleOrder handler, Repository<Order> orderRepository) {
         this.handler = handler;
+        this.orderRepository = orderRepository;
     }
 
     public UUID takeOrder(int tableNumber) {
         final Order order = buildRandomOrder(tableNumber);
         System.out.println("Taking Order.." + order);
+        orderRepository.save(order);
         handler.handle(order);
         return order.getOrderUUID();
     }

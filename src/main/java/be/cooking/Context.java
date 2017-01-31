@@ -19,7 +19,7 @@ class Context {
     final TTLChecker ttlCookGuido = new TTLChecker(cookGuido);
     final ThreadedHandler guido = createActor("Cook Guido", ttlCookGuido);
 
-    final Cook cookGreg = new Cook(manager, "Greg", 6000);
+    final Cook cookGreg = new Cook(manager, "Greg", 1000);
     final TTLChecker ttlCookGreg = new TTLChecker(cookGreg);
     final ThreadedHandler greg = createActor("Cook Greg", ttlCookGreg);
 
@@ -29,10 +29,11 @@ class Context {
             .withHandler(greg)
             .build();
     final ThreadedHandler threadedHandler = new ThreadedHandler("HandlerBob", cookers);
-    final Waiter waiter = new Waiter(cookers);
+
+    final Repository<Order> orderRepository = new Repository<>();
+    final Waiter waiter = new Waiter(cookers, orderRepository);
     final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, threadedHandler, koen, greg, guido);
     final List<Cook> cooks = Arrays.asList(cookGreg, cookGuido, cookKoen);
-    final List<TTLChecker> ttlCheckers = Arrays.asList(ttlCookGreg, ttlCookGuido, ttlCookKoen);
 
     private static ThreadedHandler createActor(String name, HandleOrder handler) {
         return new ThreadedHandler(name, handler);

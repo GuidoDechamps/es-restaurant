@@ -13,7 +13,7 @@ public class Order {
     private int total;
     private int cookTime;
     private String ingredients;
-    private boolean paid;
+    private Status status;
 
     private long timestamp;
     private long timeToLive;
@@ -27,7 +27,7 @@ public class Order {
         total = -1;
         cookTime = -1;
         ingredients = "UNKNOWN";
-        paid = false;
+        status = Status.IN_PROGRESS;
         timestamp = System.currentTimeMillis();
         timeToLive = builder.timeToLive;
     }
@@ -73,7 +73,11 @@ public class Order {
     }
 
     public void payed() {
-        this.paid = true;
+        this.status = Status.PAID;
+    }
+
+    public void dropped() {
+        this.status = Status.DROPPED;
     }
 
     public long getTimestamp() {
@@ -91,7 +95,7 @@ public class Order {
                 ", total=" + total +
                 ", cookTime=" + cookTime +
                 ", ingredients='" + ingredients + '\'' +
-                ", paid=" + paid +
+                ", status=" + status +
                 '}';
     }
 
@@ -105,6 +109,16 @@ public class Order {
         this.tax = tax;
         this.total = total;
         this.subtotal = subtotal;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public enum Status {
+        IN_PROGRESS,
+        PAID,
+        DROPPED;
     }
 
     public static final class Builder {
