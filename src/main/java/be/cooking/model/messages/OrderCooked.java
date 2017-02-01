@@ -17,4 +17,11 @@ public class OrderCooked extends MessageBase {
     public Order getOrder() {
         return order;
     }
+
+    @Override
+    public String toString() {
+        return "OrderCooked{" +
+                "order=" + order +
+                "} " + super.toString();
+    }
 }

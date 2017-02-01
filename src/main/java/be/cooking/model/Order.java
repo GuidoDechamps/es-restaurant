@@ -1,6 +1,7 @@
 package be.cooking.model;
 
 import be.cooking.generic.Expirable;
+import be.cooking.generic.UUIDGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

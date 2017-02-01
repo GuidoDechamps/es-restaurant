@@ -26,6 +26,4 @@ public class Topic implements Publisher {
     public <T extends MessageBase> void subscribe(UUID correlationId, Handler<T> handler) {
         eventMap.subscribe(correlationId, handler);
     }
-
-
 }

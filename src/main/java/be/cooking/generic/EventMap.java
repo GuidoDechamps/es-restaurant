@@ -31,7 +31,10 @@ class EventMap {
 
     @SuppressWarnings("unchecked")
     private <T extends MessageBase> List<Handler<T>> getHandlers(String typeName) {
+        if (topicEventSubscriptions.containsKey(typeName))
         return (List<Handler<T>>) topicEventSubscriptions.get(typeName);
+        else
+            return Collections.emptyList();
     }
 
     private <T extends MessageBase> String getTypeName(T message) {

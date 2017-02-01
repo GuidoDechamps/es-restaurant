@@ -18,4 +18,11 @@ public class OrderPaid extends MessageBase {
     public Order getOrder() {
         return order;
     }
+
+    @Override
+    public String toString() {
+        return "OrderPaid{" +
+                "order=" + order +
+                "} " + super.toString();
+    }
 }

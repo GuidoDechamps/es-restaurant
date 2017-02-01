@@ -17,4 +17,11 @@ public class OrderPriced extends MessageBase {
     public Order getOrder() {
         return order;
     }
+
+    @Override
+    public String toString() {
+        return "OrderPriced{" +
+                "order=" + order +
+                "} " + super.toString();
+    }
 }
