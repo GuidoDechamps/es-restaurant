@@ -15,8 +15,8 @@ public class AlarmClock implements Handler<PublishAt>, Startable {
 
     private final Publisher publisher;
     private final List<PublishAt> toBeNotified = Collections.synchronizedList(new ArrayList());
-    private boolean keepRunning = true;
     private final Thread thread = new Thread(this::loopNotifications);
+    private boolean keepRunning = true;
 
     public AlarmClock(Publisher next) {
         this.publisher = next;
@@ -48,6 +48,8 @@ public class AlarmClock implements Handler<PublishAt>, Startable {
 
     private void tryNotify() {
         final List<PublishAt> expiredMessages = getExpiredMessages();
+        if (expiredMessages.size() > 0)
+            System.out.println("AlarmClock nr of expired messages " + expiredMessages.size());
         expiredMessages.stream()
                 .map(PublishAt::getMessageToPublish)
                 .forEach(publisher::publish);
@@ -55,8 +57,17 @@ public class AlarmClock implements Handler<PublishAt>, Startable {
     }
 
     private List<PublishAt> getExpiredMessages() {
+
         final List<PublishAt> publishAts = new ArrayList<>();
         publishAts.addAll(toBeNotified);
+
+        publishAts.forEach(x -> {
+            System.out.println("------------");
+            System.out.println("Event[" + x.getMessageUUID() + "]");
+            System.out.println("TimeToPublish[" + x.getTimeToPublish() + "]");
+            System.out.println("In the past[" + (x.getTimeToPublish() < System.currentTimeMillis()) + "]");
+        });
+
         return publishAts.stream()
                 .filter(x -> x.getTimeToPublish() < System.currentTimeMillis())
                 .collect(Collectors.toList());

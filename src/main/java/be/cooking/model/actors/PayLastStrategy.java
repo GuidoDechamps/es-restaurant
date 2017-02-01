@@ -12,12 +12,12 @@ import static java.util.Collections.singletonList;
 
 class PayLastStrategy implements MidgetStrategy {
     private static final int ORDER_RETRIES = 3;
-    private static final int TIME_TO_PUBLISH = 2500;
+    private static final int TIME_TO_PUBLISH = 20;
 
     public List<MessageBase> handleEvent(MessageBase m) {
         if (m instanceof OrderPlaced) {
             final OrderPlaced orderPlaced = (OrderPlaced) m;
-            return Arrays.asList(createCookFood(orderPlaced), createPublishAt(orderPlaced));
+            return createCookFoodCommands(orderPlaced);
         } else if (m instanceof OrderCooked) {
             final OrderCooked orderCooked = (OrderCooked) m;
             return singletonList(createToThePayment(orderCooked));
@@ -34,10 +34,10 @@ class PayLastStrategy implements MidgetStrategy {
         return Collections.emptyList();
     }
 
-    private PublishAt createPublishAt(OrderPlaced orderPlaced) {
-        final CookingTimedOut cookingTimedOut = new CookingTimedOut(orderPlaced.getOrder(), orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID());
-        return new PublishAt(cookingTimedOut, orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID(), System.currentTimeMillis() + TIME_TO_PUBLISH);
+    private List<MessageBase> createCookFoodCommands(OrderPlaced orderPlaced) {
+        return Arrays.asList(createCookFood(orderPlaced), createPublishAt(orderPlaced));
     }
+
 
     private List<MessageBase> handleCookingTimeOutEvent(CookingTimedOut cookingTimedOut) {
         final Order order = cookingTimedOut.getOrder();
@@ -50,7 +50,7 @@ class PayLastStrategy implements MidgetStrategy {
                 System.out.println("To many retries " + order.getOrderUUID());
                 return Collections.emptyList();
             } else
-                return singletonList(createCookFood(cookingTimedOut));
+                return createCookFoodCommands(cookingTimedOut);
         }
     }
 
@@ -77,5 +77,19 @@ class PayLastStrategy implements MidgetStrategy {
 
     private CookFood createCookFood(CookingTimedOut cookingTimedOut) {
         return new CookFood(cookingTimedOut.getOrder(), cookingTimedOut.getCorrelationUUID(), cookingTimedOut.getMessageUUID());
+    }
+
+    private PublishAt createPublishAt(OrderPlaced orderPlaced) {
+        final CookingTimedOut cookingTimedOut = new CookingTimedOut(orderPlaced.getOrder(), orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID());
+        return new PublishAt(cookingTimedOut, orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID(), System.currentTimeMillis() + TIME_TO_PUBLISH);
+    }
+
+    private PublishAt createPublishAt(CookingTimedOut timedOut) {
+        final CookingTimedOut cookingTimedOut = new CookingTimedOut(timedOut.getOrder(), timedOut.getCorrelationUUID(), timedOut.getMessageUUID());
+        return new PublishAt(cookingTimedOut, timedOut.getCorrelationUUID(), timedOut.getMessageUUID(), System.currentTimeMillis() + TIME_TO_PUBLISH);
+    }
+
+    private List<MessageBase> createCookFoodCommands(CookingTimedOut orderPlaced) {
+        return Arrays.asList(createCookFood(orderPlaced), createPublishAt(orderPlaced));
     }
 }

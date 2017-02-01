@@ -157,7 +157,7 @@ public class Order implements Expirable {
         private final List<ItemCode> items = new ArrayList<>();
         private int tableNumber;
         private long timeToLive;
-        private boolean isDodgyCustomer = true;
+        private boolean isDodgyCustomer = false;
 
         private Builder() {
         }

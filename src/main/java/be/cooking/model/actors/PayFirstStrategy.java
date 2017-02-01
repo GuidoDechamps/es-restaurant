@@ -12,7 +12,7 @@ import static java.util.Collections.singletonList;
 
 class PayFirstStrategy implements MidgetStrategy {
 
-    private static final int TIME_TO_PUBLISH = 2500;
+    private static final int TIME_TO_PUBLISH = 20;
     private static final int ORDER_RETRIES = 3;
 
     public List<MessageBase> handleEvent(MessageBase m) {
@@ -45,10 +45,11 @@ class PayFirstStrategy implements MidgetStrategy {
 
     private List<MessageBase> handleCookingTimeOutEvent(CookingTimedOut cookingTimedOut) {
         final Order order = cookingTimedOut.getOrder();
-        if (order.getStatus() != Order.Status.ORDER_PLACED) {
-            System.out.println("Order " + order.getOrderUUID() + " already cook " + order.getStatus());
+        if (order.getStatus() != Order.Status.COOKED) {
+            System.out.println("Order " + order.getOrderUUID() + " already cooked " + order.getStatus());
             return Collections.emptyList();
         } else {
+            System.out.println("Order " + order.getOrderUUID() + " not cooked on time. Retry");
             order.increaseTries();
             if (order.getNrOfTries() > ORDER_RETRIES) {
                 System.out.println("To many retries " + order.getOrderUUID());
