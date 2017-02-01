@@ -5,8 +5,8 @@ import be.cooking.generic.Handler;
 import be.cooking.generic.Publisher;
 import be.cooking.model.Item;
 import be.cooking.model.Order;
-import be.cooking.model.messages.OrderCooked;
 import be.cooking.model.messages.OrderPlaced;
+import be.cooking.model.messages.PriceOrder;
 
 import java.util.stream.Collectors;
 
@@ -26,7 +26,7 @@ public class Cook implements Handler<OrderPlaced> {
 
     public void handle(OrderPlaced event) {
         Order order = cook(event.getOrder());
-        publisher.publish(new OrderCooked(order, event.getCorrelationUUID(), event.getMessageUUID()));
+        publisher.publish(new PriceOrder(order, event.getCorrelationUUID(), event.getMessageUUID()));
     }
 
     private Order cook(Order order) {

@@ -4,6 +4,7 @@ import be.cooking.generic.Publisher;
 import be.cooking.model.ItemCode;
 import be.cooking.model.Order;
 import be.cooking.model.Repository;
+import be.cooking.model.messages.CookFood;
 import be.cooking.model.messages.OrderPlaced;
 
 import java.util.Random;
@@ -18,6 +19,16 @@ public class Waiter {
     public Waiter(Publisher publisher, Repository<Order> orderRepository) {
         this.publisher = publisher;
         this.orderRepository = orderRepository;
+    }
+
+    public UUID takeOrder(int tableNumber) {
+        final Order order = buildRandomOrder(tableNumber);
+        System.out.println("Taking Order.." + order);
+        orderRepository.save(order);
+
+        publisher.publish(new CookFood(order));
+
+        return order.getOrderUUID();
     }
 
     private static Order buildRandomOrder(int tableNumber) {
@@ -71,15 +82,5 @@ public class Waiter {
                 .addItem(ItemCode.SPAGHETTI)
                 .addTimeToLive(5000)
                 .build();
-    }
-
-    public UUID takeOrder(int tableNumber) {
-        final Order order = buildRandomOrder(tableNumber);
-        System.out.println("Taking Order.." + order);
-        orderRepository.save(order);
-
-        publisher.publish(new OrderPlaced(order));
-
-        return order.getOrderUUID();
     }
 }
