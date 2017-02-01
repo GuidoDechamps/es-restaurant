@@ -42,3 +42,21 @@ Cut dependencies between actors. Actors only say that they are done. Midget hand
 ## random drop, duplication of messages
 
 copy paste TTL with random numbers..
+
+## Midget holds state of order as process
+it should throw events when invalid events, state.
+Now wrong in Cook and in WidgetFactory
+
+
+##  Version proces manager
+
+Don't change process
+Make new version of process manager (process definition)
+What with long running process? Then versions is required. Then it gets ugly.
+==> Event sourced process manager
+It can reinterpert then.
+
+Make topic based pub sub into Event sourced
+Change Map to Map<string, List< message based>> history
+
+getHistoryFor (Topic)
