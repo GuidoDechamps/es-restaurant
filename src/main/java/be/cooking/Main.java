@@ -1,12 +1,8 @@
 package be.cooking;
 
 import be.cooking.model.Order;
-import be.cooking.model.ThreadedHandler;
-import be.cooking.model.Waiter;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.summingInt;
+import be.cooking.model.actors.Waiter;
+import be.cooking.generic.ThreadedHandler;
 
 public class Main {
 
@@ -17,11 +13,17 @@ public class Main {
         startWorking(context.waiter);
 
         waitUntilAllOrdersAreDone(context);
-        context.threadedHandlers.forEach(ThreadedHandler::stop);
+        stopAllThreads(context);
         printStatusReport(context);
     }
 
+    private static void stopAllThreads(Context context) {
+        context.threadedHandlers.forEach(ThreadedHandler::stop);
+        //Todo wait until all stopped
+    }
+
     private static void printStatusReport(Context context) {
+        System.out.println("----------Status Report---------------------");
         context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
         System.out.println("Dropped orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DROPPED).count());
         System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.PAID).count());

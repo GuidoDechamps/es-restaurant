@@ -1,7 +1,11 @@
-package be.cooking.model;
+package be.cooking.model.actors;
 
+import be.cooking.Sleep;
+import be.cooking.model.Order;
 import be.cooking.model.messages.OrderPaid;
 import be.cooking.model.messages.OrderPriced;
+import be.cooking.generic.Handler;
+import be.cooking.generic.Publisher;
 
 public class Cashier implements Handler<OrderPriced> {
 
@@ -13,10 +17,9 @@ public class Cashier implements Handler<OrderPriced> {
     }
 
 
-
     private Order calculate(Order order) {
         System.out.println("Receiving money..");
-        sleep();
+        Sleep.sleep(5);
         order.payed();
         System.out.println("Order " + ++nrOfOrders + " PAID");
         return order;
@@ -24,14 +27,6 @@ public class Cashier implements Handler<OrderPriced> {
 
     public int getNrOfOrdersProcessed() {
         return nrOfOrders;
-    }
-
-    private void sleep() {
-        try {
-            Thread.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

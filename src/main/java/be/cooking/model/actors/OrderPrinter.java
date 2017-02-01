@@ -1,5 +1,6 @@
-package be.cooking.model;
+package be.cooking.model.actors;
 
+import be.cooking.generic.Handler;
 import be.cooking.model.messages.OrderPaid;
 
 public class OrderPrinter implements Handler<OrderPaid> {

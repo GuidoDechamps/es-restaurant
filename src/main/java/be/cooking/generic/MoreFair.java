@@ -1,6 +1,6 @@
-package be.cooking.model;
+package be.cooking.generic;
 
-import be.cooking.model.messages.MessageBase;
+import be.cooking.generic.messages.MessageBase;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -40,7 +40,7 @@ public class MoreFair<T extends MessageBase> implements Handler<T> {
         }
     }
 
-    private boolean handleMessage(T message, ThreadedHandler handler) {
+    private boolean handleMessage(T message, ThreadedHandler<T> handler) {
         handler.handle(message);
         moveFirstToLastPlaceInQueue();
         return true;

@@ -1,9 +1,12 @@
-package be.cooking.model;
+package be.cooking.model.actors;
 
 import be.cooking.Sleep;
+import be.cooking.generic.Handler;
+import be.cooking.model.Item;
+import be.cooking.model.Order;
+import be.cooking.generic.Publisher;
 import be.cooking.model.messages.OrderCooked;
 import be.cooking.model.messages.OrderPlaced;
-import be.cooking.model.messages.OrderPriced;
 
 import java.util.stream.Collectors;
 

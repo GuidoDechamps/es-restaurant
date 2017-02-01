@@ -1,7 +1,7 @@
-package be.cooking.model;
+package be.cooking.generic;
 
 
-import be.cooking.model.messages.MessageBase;
+import be.cooking.generic.messages.MessageBase;
 
 public class TTLChecker<T extends MessageBase> implements Handler<T> {
 

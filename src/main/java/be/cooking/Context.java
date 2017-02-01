@@ -1,7 +1,10 @@
 package be.cooking;
 
+import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.*;
+import be.cooking.model.actors.*;
 import be.cooking.model.messages.*;
+import be.cooking.generic.*;
 
 import java.util.Arrays;
 import java.util.List;

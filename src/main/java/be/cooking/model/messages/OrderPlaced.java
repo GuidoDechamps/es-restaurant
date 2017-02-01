@@ -1,6 +1,7 @@
 package be.cooking.model.messages;
 
-import be.cooking.model.Expirable;
+import be.cooking.generic.Expirable;
+import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.Order;
 
 public class OrderPlaced extends MessageBase implements Expirable {

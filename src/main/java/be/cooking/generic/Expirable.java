@@ -1,4 +1,4 @@
-package be.cooking.model;
+package be.cooking.generic;
 
 public interface Expirable {
     boolean isExpired();

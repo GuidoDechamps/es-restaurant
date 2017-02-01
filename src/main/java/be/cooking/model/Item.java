@@ -1,8 +1,8 @@
 package be.cooking.model;
 
 public enum Item {
-    JUPILER(ItemCode.JUPILER, "Bier"),
-    WINE(ItemCode.WINE, "Bottle"),
+    JUPILER(ItemCode.JUPILER, Recipes.JUPILER),
+    WINE(ItemCode.WINE, Recipes.BOTTLE),
     FRIETEN(ItemCode.FRIETEN, Recipes.PATATEN),
     BITTER_BALLEN(ItemCode.BITTER_BALLEN, Recipes.MEAT_LEFT_OVERS),
     SOEP(ItemCode.SOEP, Recipes.GROETEN + " , " + Recipes.BOUILLON),
@@ -11,7 +11,7 @@ public enum Item {
     private final ItemCode itemCode;
     private final String ingredienten;
 
-    private Item(ItemCode itemCode, String ingredienten) {
+    Item(ItemCode itemCode, String ingredienten) {
         this.itemCode = itemCode;
         this.ingredienten = ingredienten;
     }

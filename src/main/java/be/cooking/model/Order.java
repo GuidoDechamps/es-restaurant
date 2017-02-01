@@ -1,5 +1,7 @@
 package be.cooking.model;
 
+import be.cooking.generic.Expirable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +16,6 @@ public class Order implements Expirable {
     private int cookTime;
     private String ingredients;
     private Status status;
-
     private long timestamp;
     private long timeToLive;
 
@@ -124,10 +125,9 @@ public class Order implements Expirable {
     }
 
     public static final class Builder {
-        private UUID orderId = UUID.randomUUID();
+        private final UUID orderId = UUID.randomUUID();
+        private final List<ItemCode> items = new ArrayList<>();
         private int tableNumber;
-        private List<ItemCode> items = new ArrayList<>();
-        private boolean paid = false;
         private long timeToLive;
 
         private Builder() {

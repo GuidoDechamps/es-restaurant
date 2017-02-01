@@ -1,7 +1,7 @@
-package be.cooking.model;
+package be.cooking.generic;
 
 import be.cooking.Sleep;
-import be.cooking.model.messages.MessageBase;
+import be.cooking.generic.messages.MessageBase;
 
 import java.util.LinkedList;
 import java.util.Queue;
