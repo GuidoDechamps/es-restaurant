@@ -60,3 +60,13 @@ Make topic based pub sub into Event sourced
 Change Map to Map<string, List< message based>> history
 
 getHistoryFor (Topic)
+
+## Homework
+
+For event sourcing : deterministic guid generatie, command in same event uid. 
+Try topic replace by event store.
+
+Competing consumers
+
+Still debug locally, can be ran in separate processed.
+All typical integration issues can be found.
