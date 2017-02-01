@@ -1,8 +1,8 @@
 package be.cooking;
 
+import be.cooking.generic.ThreadedHandler;
 import be.cooking.model.Order;
 import be.cooking.model.actors.Waiter;
-import be.cooking.generic.ThreadedHandler;
 
 public class Main {
 
@@ -31,9 +31,13 @@ public class Main {
     }
 
     private static void waitUntilAllOrdersAreDone(Context context) {
-        while (context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count() < NR_OF_ORDERS_TAKEN) {
+        while (notAllOrdersAreDone(context)) {
             Sleep.sleep(200);
         }
+    }
+
+    private static boolean notAllOrdersAreDone(Context context) {
+        return context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count() < NR_OF_ORDERS_TAKEN;
     }
 
     private static void print(ThreadedHandler threadedHandler) {

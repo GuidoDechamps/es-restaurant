@@ -20,6 +20,7 @@ public class Order implements Expirable {
     private long timestamp;
     private long timeToLive;
     private boolean isDodgyCustomer;
+    private boolean s;
 
     private Order(Builder builder) {
         orderId = builder.orderId;
@@ -142,6 +143,14 @@ public class Order implements Expirable {
 
     public int getNrOfTries() {
         return nrOfTries;
+    }
+
+    public boolean isDone() {
+        return status == Status.DONE;
+    }
+
+    public boolean isDropped() {
+        return status == Status.DROPPED;
     }
 
     public enum Status {

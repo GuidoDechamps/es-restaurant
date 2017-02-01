@@ -25,6 +25,18 @@ public class Cook implements Handler<CookFood> {
     }
 
     public void handle(CookFood command) {
+        if (command.getOrder().isDropped())
+            System.out.println("The order is dropped. Not cooking");
+        else {
+            if (command.getOrder().isDone())
+                System.out.println("The order is done. Not cooking");
+            else {
+                cook(command);
+            }
+        }
+    }
+
+    private void cook(CookFood command) {
         Order order = cook(command.getOrder());
         publisher.publish(new OrderCooked(order, command.getCorrelationUUID(), command.getMessageUUID()));
     }
