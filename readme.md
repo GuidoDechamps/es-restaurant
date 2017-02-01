@@ -2,11 +2,12 @@
 
 
 
-    ID  CorrID CauseId
-    OrderPlaced  7   19      -1 (user actione)
-    CoockFood 8 19 7
-    FoodCooked 9 19 8
-    PricedOrder 10 19 9
+|MessageType|ID |CorrID| CauseId|
+|-----------|---|------|--------|
+|OrderPlaced| 7 | 19   |  -1    |
+|CoockFood  | 8 | 19   |   7    |
+|FoodCooked | 9 | 19   |   8    |
+|PricedOrder| 10| 19   |   9    |
 
 
 ID: unique event id
