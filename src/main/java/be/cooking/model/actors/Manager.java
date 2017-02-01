@@ -17,7 +17,7 @@ public class Manager implements Handler<OrderCooked> {
 
     public void handle(OrderCooked event) {
         Order order = calculate(event.getOrder());
-        publisher.publish(new OrderPriced(order));
+        publisher.publish(new OrderPriced(order, event.getCorrelationUUID(), event.getMessageUUID()));
     }
 
     private Order calculate(Order order) {
