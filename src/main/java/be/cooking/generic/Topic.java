@@ -11,6 +11,8 @@ public class Topic implements Publisher {
 
     @Override
     public <T extends MessageBase> void publish(T message) {
+        eventMap.addEvent(message);
+
         final List<Handler<T>> eventHandlers = eventMap.getEventHandlers(message);
         eventHandlers.forEach(x -> x.handle(message));
 
@@ -28,4 +30,7 @@ public class Topic implements Publisher {
     }
 
 
+    public List<MessageBase> getHistory(UUID correlationUUID) {
+        return eventMap.getHistory(correlationUUID);
+    }
 }

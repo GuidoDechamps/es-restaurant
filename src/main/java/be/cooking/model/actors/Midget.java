@@ -8,12 +8,16 @@ import java.util.List;
 
 public class Midget implements Handler<MessageBase> {
 
-    private final Publisher publisher;
     private final MidgetStrategy midgetStrategy;
+    private Publisher publisher;
 
-    public Midget(Publisher publisher,  MidgetStrategy midgetStrategy) {
+    public Midget(Publisher publisher, MidgetStrategy midgetStrategy) {
         this.publisher = publisher;
         this.midgetStrategy = midgetStrategy;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
     }
 
     public void handle(MessageBase m) {
