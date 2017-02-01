@@ -5,9 +5,9 @@ import be.cooking.generic.Handler;
 import be.cooking.generic.Publisher;
 import be.cooking.model.Order;
 import be.cooking.model.messages.OrderPaid;
-import be.cooking.model.messages.OrderPriced;
+import be.cooking.model.messages.ToThePayment;
 
-public class Cashier implements Handler<OrderPriced> {
+public class Cashier implements Handler<ToThePayment> {
 
     private final Publisher publisher;
     private int nrOfOrders = 0;
@@ -16,6 +16,12 @@ public class Cashier implements Handler<OrderPriced> {
         this.publisher = next;
     }
 
+
+    @Override
+    public void handle(ToThePayment command) {
+        Order order = calculate(command.getOrder());
+        publisher.publish(new OrderPaid(order, command.getCorrelationUUID(), command.getMessageUUID()));
+    }
 
     private Order calculate(Order order) {
         System.out.println("Receiving money..");
@@ -27,11 +33,5 @@ public class Cashier implements Handler<OrderPriced> {
 
     public int getNrOfOrdersProcessed() {
         return nrOfOrders;
-    }
-
-    @Override
-    public void handle(OrderPriced event) {
-        Order order = calculate(event.getOrder());
-        publisher.publish(new OrderPaid(order, event.getCorrelationUUID(), event.getMessageUUID()));
     }
 }

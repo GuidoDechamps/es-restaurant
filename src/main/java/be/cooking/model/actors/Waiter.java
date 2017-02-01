@@ -4,7 +4,6 @@ import be.cooking.generic.Publisher;
 import be.cooking.model.ItemCode;
 import be.cooking.model.Order;
 import be.cooking.model.Repository;
-import be.cooking.model.messages.CookFood;
 import be.cooking.model.messages.OrderPlaced;
 
 import java.util.Random;
@@ -26,7 +25,8 @@ public class Waiter {
         System.out.println("Taking Order.." + order);
         orderRepository.save(order);
 
-        publisher.publish(new CookFood(order));
+        final OrderPlaced orderPlaced = new OrderPlaced(order);
+        publisher.publish(orderPlaced);
 
         return order.getOrderUUID();
     }

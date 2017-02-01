@@ -6,7 +6,7 @@ import be.cooking.generic.ThreadedHandler;
 
 public class Main {
 
-    private static final int NR_OF_ORDERS_TAKEN = 100;
+    private static final int NR_OF_ORDERS_TAKEN = 10;
 
     public static void main(String[] args) {
         final Context context = Context.create();

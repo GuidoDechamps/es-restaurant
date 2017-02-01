@@ -4,10 +4,10 @@ import be.cooking.Sleep;
 import be.cooking.generic.Handler;
 import be.cooking.generic.Publisher;
 import be.cooking.model.Order;
-import be.cooking.model.messages.OrderCooked;
-import be.cooking.model.messages.ToThePayment;
+import be.cooking.model.messages.OrderPriced;
+import be.cooking.model.messages.PriceOrder;
 
-public class Manager implements Handler<OrderCooked> {
+public class Manager implements Handler<PriceOrder> {
 
     private final Publisher publisher;
 
@@ -15,9 +15,9 @@ public class Manager implements Handler<OrderCooked> {
         this.publisher = publisher;
     }
 
-    public void handle(OrderCooked event) {
-        Order order = calculate(event.getOrder());
-        publisher.publish(new ToThePayment(order, event.getCorrelationUUID(), event.getMessageUUID()));
+    public void handle(PriceOrder priceOrder) {
+        Order order = calculate(priceOrder.getOrder());
+        publisher.publish(new OrderPriced(order, priceOrder.getCorrelationUUID(), priceOrder.getMessageUUID()));
     }
 
     private Order calculate(Order order) {

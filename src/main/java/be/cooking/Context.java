@@ -1,16 +1,21 @@
 package be.cooking;
 
-import be.cooking.generic.messages.MessageBase;
-import be.cooking.model.*;
-import be.cooking.model.actors.*;
-import be.cooking.model.messages.*;
 import be.cooking.generic.*;
+import be.cooking.generic.messages.MessageBase;
+import be.cooking.model.Order;
+import be.cooking.model.Repository;
+import be.cooking.model.actors.*;
+import be.cooking.model.messages.CookFood;
+import be.cooking.model.messages.OrderPlaced;
+import be.cooking.model.messages.PriceOrder;
+import be.cooking.model.messages.ToThePayment;
 
 import java.util.Arrays;
 import java.util.List;
 
 class Context {
     final Topic topic = new Topic();
+    final MidgetHouse midgetHouse = new MidgetHouse(topic);
     final ThreadedHandler orderPrinter = createActor("Printer", new OrderPrinter());
     final Cashier cashier = new Cashier(topic);
     final ThreadedHandler threadCashier = createActor("MoneyMan", cashier);
@@ -60,10 +65,11 @@ class Context {
     }
 
     private void wire() {
-        topic.subscribe(OrderPriced.class, threadCashier);
-        topic.subscribe(OrderPaid.class, orderPrinter);
-        topic.subscribe(OrderCooked.class, manager);
-        topic.subscribe(OrderPlaced.class, bobTheDistributer);
+        topic.subscribe(PriceOrder.class, manager);
+        topic.subscribe(ToThePayment.class, cashier);
+        topic.subscribe(CookFood.class, bobTheDistributer);
+
+        topic.subscribe(OrderPlaced.class, midgetHouse.new OrderPlaceHandler());
     }
 
 }
