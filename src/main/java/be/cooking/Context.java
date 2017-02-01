@@ -64,6 +64,7 @@ class Context {
         topic.subscribe(OrderPaid.class, orderPrinter);
         topic.subscribe(OrderCooked.class, manager);
         topic.subscribe(OrderPlaced.class, bobTheDistributer);
+        topic.subscribe();
     }
 
 }
