@@ -18,6 +18,7 @@ public class Order implements Expirable {
     private Status status;
     private long timestamp;
     private long timeToLive;
+    private boolean isDodgyCustomer;
 
     private Order(Builder builder) {
         orderId = builder.orderId;
@@ -31,6 +32,7 @@ public class Order implements Expirable {
         status = Status.IN_PROGRESS;
         timestamp = System.currentTimeMillis();
         timeToLive = builder.timeToLive;
+        isDodgyCustomer = builder.isDodgyCustomer;
     }
 
     public static Builder newBuilder() {
@@ -78,6 +80,10 @@ public class Order implements Expirable {
         this.status = Status.PAID;
     }
 
+    public void done() {
+        this.status = Status.DONE;
+    }
+
     @Override
     public void drop() {
         this.status = Status.DROPPED;
@@ -118,8 +124,13 @@ public class Order implements Expirable {
         return status;
     }
 
+    public boolean isDodgyCustomer() {
+        return isDodgyCustomer;
+    }
+
     public enum Status {
         IN_PROGRESS,
+        DONE,
         PAID,
         DROPPED;
     }
@@ -129,6 +140,7 @@ public class Order implements Expirable {
         private final List<ItemCode> items = new ArrayList<>();
         private int tableNumber;
         private long timeToLive;
+        private boolean isDodgyCustomer = true;
 
         private Builder() {
         }
@@ -136,6 +148,11 @@ public class Order implements Expirable {
 
         public Builder withTableNumber(int val) {
             tableNumber = val;
+            return this;
+        }
+
+        public Builder isDodgyCustomer() {
+            isDodgyCustomer = true;
             return this;
         }
 

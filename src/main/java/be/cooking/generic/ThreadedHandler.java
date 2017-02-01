@@ -3,11 +3,12 @@ package be.cooking.generic;
 import be.cooking.Sleep;
 import be.cooking.generic.messages.MessageBase;
 
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ThreadedHandler<T extends MessageBase> implements Handler<T>, Startable {
-    private final Queue<T> messages = new LinkedList<>();
+    private static final Queue<ThreadedHandler> ALL_THREADS = new ConcurrentLinkedDeque<>();
+    private final Queue<T> messages = new ConcurrentLinkedDeque<>();
     private final Handler<T> handler;
     private final Thread thread;
     private final String name;
@@ -17,6 +18,11 @@ public class ThreadedHandler<T extends MessageBase> implements Handler<T>, Start
         this.handler = handler;
         this.name = name;
         thread = new Thread(this::handleExistingOrders);
+        ALL_THREADS.add(this);
+    }
+
+    public static void stopAll() {
+        ALL_THREADS.forEach(ThreadedHandler::stop);
     }
 
     @Override

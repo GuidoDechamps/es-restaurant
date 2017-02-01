@@ -6,32 +6,32 @@ import be.cooking.generic.ThreadedHandler;
 
 public class Main {
 
-    private static final int NR_OF_ORDERS_TAKEN = 10;
+    private static final int NR_OF_ORDERS_TAKEN = 100;
 
     public static void main(String[] args) {
         final Context context = Context.create();
         startWorking(context.waiter);
 
         waitUntilAllOrdersAreDone(context);
-        stopAllThreads(context);
         printStatusReport(context);
+        stopAllThreads(context);
     }
 
     private static void stopAllThreads(Context context) {
-        context.threadedHandlers.forEach(ThreadedHandler::stop);
-        //Todo wait until all stopped
+        System.out.println("-------------------------------");
+        ThreadedHandler.stopAll();
     }
 
     private static void printStatusReport(Context context) {
         System.out.println("----------Status Report---------------------");
         context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
         System.out.println("Dropped orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DROPPED).count());
-        System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.PAID).count());
+        System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count());
 
     }
 
     private static void waitUntilAllOrdersAreDone(Context context) {
-        while (context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.IN_PROGRESS).count() > 0) {
+        while (context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count() < NR_OF_ORDERS_TAKEN) {
             Sleep.sleep(200);
         }
     }

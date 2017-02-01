@@ -5,10 +5,7 @@ import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.Order;
 import be.cooking.model.Repository;
 import be.cooking.model.actors.*;
-import be.cooking.model.messages.CookFood;
-import be.cooking.model.messages.OrderPlaced;
-import be.cooking.model.messages.PriceOrder;
-import be.cooking.model.messages.ToThePayment;
+import be.cooking.model.messages.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +67,7 @@ class Context {
         topic.subscribe(CookFood.class, bobTheDistributer);
 
         topic.subscribe(OrderPlaced.class, midgetHouse.new OrderPlaceHandler());
+        topic.subscribe(WorkDone.class, midgetHouse.new WorkDoneHandler());
     }
 
 }
