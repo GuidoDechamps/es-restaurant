@@ -21,8 +21,8 @@ in separate branch. Publish/subscribe on correlationIds
 
 ## Introduce commands
 
-Commands added => invert relationship. Now cook nows where to send the order to.
-Changing order of operations: pay for food first => it requires big software change. All actors need to change.
+Commands added => invert relationship. Now cook nows where to send the messageToPublish to.
+Changing messageToPublish of operations: pay for food first => it requires big software change. All actors need to change.
 4 microservices/teams need to coordinate a release. + downtime.
 WHTF? :-)
 
@@ -37,3 +37,8 @@ Cut dependencies between actors. Actors only say that they are done. Midget hand
     * Map of correlationId. Midgets listen to all events from process correlationId
     * subscribe midget to correlationId or subscribe house.
     * Threaded handlers important to make actors single threaded. 
+    
+    
+## random drop, duplication of messages
+
+copy paste TTL with random numbers..

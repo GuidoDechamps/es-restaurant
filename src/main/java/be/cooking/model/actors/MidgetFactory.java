@@ -13,7 +13,7 @@ class MidgetFactory {
     }
 
     Midget createMidget(Order order) {
-        return new Midget(publisher,order.getOrderUUID(), determineStrategy(order));
+        return new Midget(publisher, determineStrategy(order));
     }
 
     private MidgetStrategy determineStrategy(Order order) {

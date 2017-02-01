@@ -36,6 +36,7 @@ public class Cook implements Handler<CookFood> {
 
         Sleep.sleep(cookTime);
         System.out.println(name + " is done cooking");
+        order.cooked();
         return order;
     }
 

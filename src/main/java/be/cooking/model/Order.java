@@ -14,6 +14,7 @@ public class Order implements Expirable {
     private int tax;
     private int total;
     private int cookTime;
+    private int nrOfTries;
     private String ingredients;
     private Status status;
     private long timestamp;
@@ -29,7 +30,7 @@ public class Order implements Expirable {
         total = -1;
         cookTime = -1;
         ingredients = "UNKNOWN";
-        status = Status.IN_PROGRESS;
+        status = Status.ORDER_PLACED;
         timestamp = System.currentTimeMillis();
         timeToLive = builder.timeToLive;
         isDodgyCustomer = builder.isDodgyCustomer;
@@ -111,7 +112,6 @@ public class Order implements Expirable {
     public void addCookInfo(int cookTime, String ingredients) {
         this.cookTime = cookTime;
         this.ingredients = ingredients;
-        this.ingredients = ingredients;
     }
 
     public void addPrices(int tax, int total, int subtotal) {
@@ -128,8 +128,25 @@ public class Order implements Expirable {
         return isDodgyCustomer;
     }
 
+    public boolean isCooked() {
+        return status == Status.COOKED;
+    }
+
+    public void cooked() {
+        this.status = Status.COOKED;
+    }
+
+    public void increaseTries() {
+        nrOfTries++;
+    }
+
+    public int getNrOfTries() {
+        return nrOfTries;
+    }
+
     public enum Status {
-        IN_PROGRESS,
+        ORDER_PLACED,
+        COOKED,
         DONE,
         PAID,
         DROPPED;

@@ -12,6 +12,8 @@ import java.util.List;
 
 class Context {
     final Topic topic = new Topic();
+    final AlarmClock clock = new AlarmClock(topic);
+    final ThreadedHandler threadedAlarmClock = createActor("AlarmClock", clock);
     final MidgetHouse midgetHouse = new MidgetHouse(topic);
     final ThreadedHandler orderPrinter = createActor("Printer", new OrderPrinter());
     final Cashier cashier = new Cashier(topic);
@@ -40,7 +42,7 @@ class Context {
     final ThreadedHandler bobTheDistributer = new ThreadedHandler("HandlerBob", cookers);
 
     final Waiter waiter = new Waiter(topic, orderRepository);
-    final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, bobTheDistributer, koen, greg, guido);
+    final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, bobTheDistributer, koen, greg, guido, threadedAlarmClock);
     final List<Cook> cooks = Arrays.asList(cookGreg, cookGuido, cookKoen);
 
     private Context() {
@@ -55,6 +57,8 @@ class Context {
 
     private static void startThreadHandlers(Context context) {
         context.threadedHandlers.forEach(ThreadedHandler::start);
+        context.clock.start();
+
     }
 
     private static ThreadedHandler createActor(String name, Handler<? extends MessageBase> handler) {
@@ -65,6 +69,7 @@ class Context {
         topic.subscribe(PriceOrder.class, manager);
         topic.subscribe(ToThePayment.class, cashier);
         topic.subscribe(CookFood.class, bobTheDistributer);
+        topic.subscribe(PublishAt.class, threadedAlarmClock);
 
         topic.subscribe(OrderPlaced.class, midgetHouse.new OrderPlaceHandler());
         topic.subscribe(WorkDone.class, midgetHouse.new WorkDoneHandler());

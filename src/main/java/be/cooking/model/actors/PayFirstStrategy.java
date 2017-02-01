@@ -1,31 +1,66 @@
 package be.cooking.model.actors;
 
 import be.cooking.generic.messages.MessageBase;
+import be.cooking.model.Order;
 import be.cooking.model.messages.*;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
-import static java.util.Optional.of;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 class PayFirstStrategy implements MidgetStrategy {
 
-    public Optional<MessageBase> handleEvent(MessageBase m) {
+    private static final int TIME_TO_PUBLISH = 2500;
+    private static final int ORDER_RETRIES = 3;
+
+    public List<MessageBase> handleEvent(MessageBase m) {
         if (m instanceof OrderPlaced) {
             final OrderPlaced orderPlaced = (OrderPlaced) m;
-            return of(createToThePricing(orderPlaced));
+            return asList(createToThePricing(orderPlaced), createPublishAt(orderPlaced));
         } else if (m instanceof OrderPriced) {
             final OrderPriced orderPriced = (OrderPriced) m;
-            return of(createToThePayment(orderPriced));
+            return singletonList(createToThePayment(orderPriced));
         } else if (m instanceof OrderPaid) {
             final OrderPaid orderPriced = (OrderPaid) m;
-            return of(createCookFood(orderPriced));
+            return handleOrderPaid(createCookFood(orderPriced));
+        } else if (m instanceof CookingTimedOut) {
+            return handleCookingTimeOutEvent((CookingTimedOut) m);
         } else if (m instanceof OrderCooked) {
-            final OrderCooked orderCooked = (OrderCooked) m;
-            setOrderToFinished(orderCooked);//TODO must be elsewhere
-            return of(createWorkDone(orderCooked));
+            return handleOrderCooked((OrderCooked) m);
         }
-        return Optional.empty();
+        return Collections.emptyList();
 
+    }
+
+    private List<MessageBase> handleOrderPaid(CookFood cookFood) {
+        return singletonList(cookFood);
+    }
+
+    private List<MessageBase> handleOrderCooked(OrderCooked orderCooked) {
+        setOrderToFinished(orderCooked);
+        return singletonList(createWorkDone(orderCooked));
+    }
+
+    private List<MessageBase> handleCookingTimeOutEvent(CookingTimedOut cookingTimedOut) {
+        final Order order = cookingTimedOut.getOrder();
+        if (order.getStatus() != Order.Status.ORDER_PLACED) {
+            System.out.println("Order " + order.getOrderUUID() + " already cook " + order.getStatus());
+            return Collections.emptyList();
+        } else {
+            order.increaseTries();
+            if (order.getNrOfTries() > ORDER_RETRIES) {
+                System.out.println("To many retries " + order.getOrderUUID());
+                return Collections.emptyList();
+            } else
+                return singletonList(createCookFood(cookingTimedOut));
+        }
+    }
+
+    private PublishAt createPublishAt(OrderPlaced orderPlaced) {
+        final CookingTimedOut cookingTimedOut = new CookingTimedOut(orderPlaced.getOrder(), orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID());
+        return new PublishAt(cookingTimedOut, orderPlaced.getCorrelationUUID(), orderPlaced.getMessageUUID(), System.currentTimeMillis() + TIME_TO_PUBLISH);
     }
 
     private WorkDone createWorkDone(OrderCooked orderCooked) {
@@ -38,6 +73,10 @@ class PayFirstStrategy implements MidgetStrategy {
 
     private CookFood createCookFood(OrderPaid orderPaid) {
         return new CookFood(orderPaid.getOrder(), orderPaid.getCorrelationUUID(), orderPaid.getMessageUUID());
+    }
+
+    private CookFood createCookFood(CookingTimedOut cookingTimedOut) {
+        return new CookFood(cookingTimedOut.getOrder(), cookingTimedOut.getCorrelationUUID(), cookingTimedOut.getMessageUUID());
     }
 
     private PriceOrder createToThePricing(OrderPlaced orderPlaced) {
