@@ -5,12 +5,19 @@ import be.cooking.generic.Publisher;
 import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.messages.*;
 
+import java.util.UUID;
+import java.util.function.Consumer;
+
 public class Midget implements Handler<MessageBase> {
 
     private final Publisher publisher;
+    private final Consumer<Midget> midgetDone;
+    private UUID correlationId;
 
-    public Midget(Publisher publisher) {
+    public Midget(Publisher publisher, UUID correlationId, Consumer<Midget> midgetDone) {
         this.publisher = publisher;
+        this.correlationId = correlationId;
+        this.midgetDone = midgetDone;
     }
 
     public void handle(MessageBase m) {
@@ -23,8 +30,14 @@ public class Midget implements Handler<MessageBase> {
         } else if (m instanceof OrderPriced) {
             final OrderPriced orderPriced = (OrderPriced) m;
             publisher.publish(createToThePayment(orderPriced));
+        } else if (m instanceof OrderPaid) {
+            midgetDone.accept(this);
         } else
             System.out.println("Midget ignores " + m);
+    }
+
+    public UUID getCorrelationId() {
+        return correlationId;
     }
 
     private CookFood createCookFood(OrderPlaced orderPlaced) {

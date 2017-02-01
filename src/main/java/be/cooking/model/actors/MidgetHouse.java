@@ -20,28 +20,41 @@ public class MidgetHouse {
         this.topic = topic;
     }
 
-    private void check(OrderPlaced orderPlaced) {
+    private void checkOrderShouldNotAlreadyExists(OrderPlaced orderPlaced) {
         if (midgets.containsKey(orderPlaced.getCorrelationUUID()))
             throw new RuntimeException("CorrelationUUid already exists");
+    }
+
+    private void checkMidgetExists(Midget midget) {
+        if (!midgets.containsKey(midget.getCorrelationId()))
+            throw new RuntimeException("Cannot clean midget because midget is not found");
     }
 
     public class OrderPlaceHandler implements Handler<OrderPlaced> {
         @Override
         public void handle(OrderPlaced orderPlaced) {
-            check(orderPlaced);
-            final Midget midget = new Midget(topic);
+            checkOrderShouldNotAlreadyExists(orderPlaced);
+            final Midget midget = new Midget(topic, orderPlaced.getCorrelationUUID(), this::removeMidgetByCorrelationId);
             midgets.put(orderPlaced.getCorrelationUUID(), midget);
             final ThreadedHandler<MessageBase> messageBaseThreadedHandler = new ThreadedHandler<>("MidgetHouse", new MessageBaseHanlder());
             topic.subscribe(orderPlaced.getCorrelationUUID(), messageBaseThreadedHandler);
             messageBaseThreadedHandler.start();
         }
+
+        public void removeMidgetByCorrelationId(Midget midget) {
+            checkMidgetExists(midget);
+            midgets.remove(midget.getCorrelationId());
+        }
     }
+
 
     public class MessageBaseHanlder implements Handler<MessageBase> {
         @Override
         public void handle(MessageBase value) {
             final Midget midget = midgets.get(value.getCorrelationUUID());
-            midget.handle(value);
+            if (midget != null) {
+                midget.handle(value);
+            }
         }
     }
 }
