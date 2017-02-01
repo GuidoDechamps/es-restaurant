@@ -20,15 +20,15 @@ class Context {
     final ThreadedHandler threadCashier = createActor("MoneyMan", cashier);
     final ThreadedHandler manager = createActor("Manager", new Manager(topic));
 
-    final Cook cookKoen = new Cook(topic, "Koen", 35000);
+    final Cook cookKoen = new Cook(topic, "Koen", 350);
     final TTLChecker ttlCookKoen = new TTLChecker(cookKoen);
     final ThreadedHandler koen = createActor("Cook Koen", ttlCookKoen);
 
-    final Cook cookGuido = new Cook(topic, "Guido", 20000);
+    final Cook cookGuido = new Cook(topic, "Guido", 200);
     final TTLChecker ttlCookGuido = new TTLChecker(cookGuido);
     final ThreadedHandler guido = createActor("Cook Guido", ttlCookGuido);
 
-    final Cook cookGreg = new Cook(topic, "Greg", 6000);
+    final Cook cookGreg = new Cook(topic, "Greg", 600);
     final TTLChecker ttlCookGreg = new TTLChecker(cookGreg);
     final ThreadedHandler greg = createActor("Cook Greg", ttlCookGreg);
 

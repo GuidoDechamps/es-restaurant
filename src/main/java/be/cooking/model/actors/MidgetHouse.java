@@ -7,13 +7,12 @@ import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.messages.OrderPlaced;
 import be.cooking.model.messages.WorkDone;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class MidgetHouse {
 
     private final Map<UUID, Midget> midgets = new HashMap<>();
+    private final List<UUID> processedEvents = new ArrayList<>();
     private final Map<UUID, ThreadedHandler<MessageBase>> processHandlers = new HashMap<>();
     private final Topic topic;
     private final MidgetFactory midgetFactory;
@@ -22,7 +21,15 @@ public class MidgetHouse {
     public MidgetHouse(Topic topic) {
         this.topic = topic;
         this.midgetFactory = new MidgetFactory(topic);
+    }
 
+    private boolean isUniqueEvent(MessageBase event) {
+        if (processedEvents.contains(event))
+            return false;
+        else {
+            processedEvents.add(event.getMessageUUID());
+            return true;
+        }
     }
 
     private void checkOrderShouldNotAlreadyExists(OrderPlaced orderPlaced) {
@@ -34,9 +41,11 @@ public class MidgetHouse {
     public class OrderPlaceHandler implements Handler<OrderPlaced> {
         @Override
         public void handle(OrderPlaced orderPlaced) {
-            checkOrderShouldNotAlreadyExists(orderPlaced);
-            createMidget(orderPlaced);
-            createProcessHandlerForCorrelationUUID(orderPlaced);
+            if (isUniqueEvent(orderPlaced)) {
+                checkOrderShouldNotAlreadyExists(orderPlaced);
+                createMidget(orderPlaced);
+                createProcessHandlerForCorrelationUUID(orderPlaced);
+            }
         }
 
         private void createProcessHandlerForCorrelationUUID(OrderPlaced orderPlaced) {
@@ -58,9 +67,11 @@ public class MidgetHouse {
     public class MessageBaseHandler implements Handler<MessageBase> {
         @Override
         public void handle(MessageBase value) {
-            final Midget midget = midgets.get(value.getCorrelationUUID());
-            if (midget != null) {
-                midget.handle(value);
+            if (isUniqueEvent(value)) {
+                final Midget midget = midgets.get(value.getCorrelationUUID());
+                if (midget != null) {
+                    midget.handle(value);
+                }
             }
         }
     }
@@ -68,9 +79,11 @@ public class MidgetHouse {
     public class WorkDoneHandler implements Handler<WorkDone> {
         @Override
         public void handle(WorkDone value) {
-            final UUID correlationUUID = value.getCorrelationUUID();
-            removeHandler(correlationUUID);
-            removeWidget(correlationUUID);
+            if (isUniqueEvent(value)) {
+                final UUID correlationUUID = value.getCorrelationUUID();
+                removeHandler(correlationUUID);
+                removeWidget(correlationUUID);
+            }
 
         }
 

@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 
 abstract class AbstractStrategy implements MidgetStrategy {
 
-    static final int TIME_TO_PUBLISH = 20;
+    static final int TIME_TO_PUBLISH = 2500;
     static final int ORDER_RETRIES = 3;
 
     void setOrderToFinished(OrderPaid m) {
