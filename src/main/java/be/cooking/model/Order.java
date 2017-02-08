@@ -1,12 +1,10 @@
 package be.cooking.model;
 
-import be.cooking.generic.Expirable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Order implements Expirable {
+public class Order {
     private final UUID orderId;
     private int tableNumber;
     private List<ItemCode> items;
@@ -16,11 +14,9 @@ public class Order implements Expirable {
     private int cookTime;
     private int nrOfTries;
     private String ingredients;
-    private Status status;
     private long timestamp;
     private long timeToLive;
     private boolean isDodgyCustomer;
-    private boolean s;
 
     private Order(Builder builder) {
         orderId = builder.orderId;
@@ -31,7 +27,6 @@ public class Order implements Expirable {
         total = -1;
         cookTime = -1;
         ingredients = "UNKNOWN";
-        status = Status.ORDER_PLACED;
         timestamp = System.currentTimeMillis();
         timeToLive = builder.timeToLive;
         isDodgyCustomer = builder.isDodgyCustomer;
@@ -41,7 +36,6 @@ public class Order implements Expirable {
         return new Builder();
     }
 
-    @Override
     public boolean isExpired() {
         return System.currentTimeMillis() - timestamp > timeToLive;
     }
@@ -78,22 +72,10 @@ public class Order implements Expirable {
         return ingredients;
     }
 
-    public void payed() {
-        this.status = Status.PAID;
-    }
-
-    public void done() {
-        this.status = Status.DONE;
-    }
-
-    @Override
-    public void drop() {
-        this.status = Status.DROPPED;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
+
 
     @Override
     public String toString() {
@@ -106,7 +88,6 @@ public class Order implements Expirable {
                 ", total=" + total +
                 ", cookTime=" + cookTime +
                 ", ingredients='" + ingredients + '\'' +
-                ", status=" + status +
                 '}';
     }
 
@@ -121,21 +102,11 @@ public class Order implements Expirable {
         this.subtotal = subtotal;
     }
 
-    public Status getStatus() {
-        return status;
-    }
 
     public boolean isDodgyCustomer() {
         return isDodgyCustomer;
     }
 
-    public boolean isCooked() {
-        return status == Status.COOKED;
-    }
-
-    public void cooked() {
-        this.status = Status.COOKED;
-    }
 
     public void increaseTries() {
         nrOfTries++;
@@ -145,21 +116,6 @@ public class Order implements Expirable {
         return nrOfTries;
     }
 
-    public boolean isDone() {
-        return status == Status.DONE;
-    }
-
-    public boolean isDropped() {
-        return status == Status.DROPPED;
-    }
-
-    public enum Status {
-        ORDER_PLACED,
-        COOKED,
-        DONE,
-        PAID,
-        DROPPED;
-    }
 
     public static final class Builder {
         private final UUID orderId = UUID.randomUUID();

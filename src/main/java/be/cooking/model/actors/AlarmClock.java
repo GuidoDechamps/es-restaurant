@@ -48,6 +48,7 @@ public class AlarmClock implements Handler<PublishAt>, Startable {
 
     private void tryNotify() {
         final List<PublishAt> expiredMessages = getExpiredMessages();
+        print(expiredMessages);
         if (expiredMessages.size() > 0)
             System.out.println("AlarmClock nr of expired messages " + expiredMessages.size());
         expiredMessages.stream()

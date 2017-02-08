@@ -4,7 +4,7 @@ import be.cooking.generic.messages.MessageBase;
 
 import java.util.UUID;
 
-public class PublishAt extends MessageBase {
+public class PublishAt extends MessageBase<MessageBase<?>> {
     private final MessageBase messageToPublish;
     private final long timeToPublish;
 
@@ -20,5 +20,11 @@ public class PublishAt extends MessageBase {
 
     public long getTimeToPublish() {
         return timeToPublish;
+    }
+
+
+    @Override
+    public MessageBase getContent() {
+        return getMessageToPublish();
     }
 }

@@ -26,12 +26,8 @@ public class Cashier implements Handler<ToThePayment> {
     private Order calculate(Order order) {
         System.out.println("Receiving money..");
         Sleep.sleep(5);
-        order.payed();
         System.out.println("Order " + ++nrOfOrders + " PAID");
         return order;
     }
 
-    public int getNrOfOrdersProcessed() {
-        return nrOfOrders;
-    }
 }

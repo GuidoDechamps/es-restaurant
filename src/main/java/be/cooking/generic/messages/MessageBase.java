@@ -3,7 +3,7 @@ package be.cooking.generic.messages;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MessageBase {
+public abstract class MessageBase<T> {
     private final UUID messageUUID = UUID.randomUUID();
     private final UUID correlationUUID;
     private final UUID causeUUID;
@@ -15,11 +15,17 @@ public class MessageBase {
         this.causeUUID = causeUUID;
     }
 
+    public MessageBase(MessageBase<?> causationMessage) {
+        this(causationMessage.correlationUUID, causationMessage.messageUUID);
+    }
+
     public MessageBase(UUID correlationUUID) {
         checkNotNull(correlationUUID);
         this.correlationUUID = correlationUUID;
         this.causeUUID = null;
     }
+
+    public abstract T getContent();
 
     private void checkNotNull(UUID uuid) {
         if (uuid == null)

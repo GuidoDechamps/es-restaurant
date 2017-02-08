@@ -1,11 +1,11 @@
 package be.cooking.model.actors;
 
-import be.cooking.generic.DevNullPublisher;
 import be.cooking.generic.Handler;
 import be.cooking.generic.ThreadedHandler;
 import be.cooking.generic.Topic;
 import be.cooking.generic.messages.MessageBase;
 import be.cooking.model.Order;
+import be.cooking.model.Repository;
 import be.cooking.model.messages.OrderPlaced;
 import be.cooking.model.messages.WorkDone;
 
@@ -16,31 +16,25 @@ import java.util.UUID;
 
 public class MidgetHouse {
 
-    private final Map<UUID, MidgetStrategy> midgetStrategy = new HashMap<>();
+    private final Map<UUID, OrderStatus> orderStates = new HashMap<>();
     private final Map<UUID, ThreadedHandler<MessageBase>> processHandlers = new HashMap<>();
     private final Topic topic;
     private final MidgetFactory midgetFactory;
-    private final MidgetStrategy payLastStrategy = new PayLastStrategy();
-    private final MidgetStrategy payFirstStrategy = new PayFirstStrategy();
+    private final Repository<Order> repository;
 
 
-    public MidgetHouse(Topic topic) {
+    public MidgetHouse(Topic topic, Repository<Order> repository) {
         this.topic = topic;
         this.midgetFactory = new MidgetFactory(topic);
+        this.repository = repository;
     }
-
-//
-//    private void checkOrderShouldNotAlreadyExists(OrderPlaced orderPlaced) {
-//        if (midgets.containsKey(orderPlaced.getCorrelationUUID()))
-//            throw new RuntimeException("CorrelationUUid already exists");
-//    }
 
 
     public class OrderPlaceHandler implements Handler<OrderPlaced> {
         @Override
         public void handle(OrderPlaced orderPlaced) {
-//            checkOrderShouldNotAlreadyExists(orderPlaced);
-            registerStrategy(orderPlaced);
+            System.out.println("Work started for order " + orderPlaced.getCorrelationUUID());
+            registerOrderState(orderPlaced);
             createProcessHandlerForCorrelationUUID(orderPlaced);
         }
 
@@ -52,16 +46,9 @@ public class MidgetHouse {
             messageBaseThreadedHandler.start();
         }
 
-        private MidgetStrategy determineStrategy(Order order) {
-            if (order.isDodgyCustomer())
-                return payFirstStrategy;
-            else
-                return payLastStrategy;
-        }
 
-        private void registerStrategy(OrderPlaced orderPlaced) {
-            final MidgetStrategy midget = determineStrategy(orderPlaced.getOrder());
-            midgetStrategy.put(orderPlaced.getCorrelationUUID(), midget);
+        private void registerOrderState(OrderPlaced orderPlaced) {
+            orderStates.put(orderPlaced.getCorrelationUUID(), OrderStatus.ORDER_PLACED);
         }
 
 
@@ -70,10 +57,8 @@ public class MidgetHouse {
     public class MessageBaseHandler implements Handler<MessageBase> {
         @Override
         public void handle(MessageBase value) {
-            final Midget midget = new Midget(DevNullPublisher.INSTANCE, midgetStrategy.get(value.getCorrelationUUID()));
             final List<MessageBase> history = topic.getHistory(value.getCorrelationUUID());
-            history.forEach(midget::handle);
-            midget.setPublisher(topic);
+            final Midget midget = midgetFactory.createMidget(value, history);
             midget.handle(value);
         }
     }
@@ -81,6 +66,8 @@ public class MidgetHouse {
     public class WorkDoneHandler implements Handler<WorkDone> {
         @Override
         public void handle(WorkDone value) {
+            repository.save(value.getContent());
+            System.out.println("Work Done for order" + value.getCorrelationUUID());
             final UUID correlationUUID = value.getCorrelationUUID();
             removeHandler(correlationUUID);
             removeWidget(correlationUUID);
@@ -88,7 +75,8 @@ public class MidgetHouse {
 
         private void removeWidget(UUID correlationUUID) {
             checkMidgetExists(correlationUUID);
-            midgetStrategy.remove(correlationUUID);
+            orderStates.remove(correlationUUID);
+
         }
 
         private void removeHandler(UUID correlationUUID) {
@@ -98,7 +86,7 @@ public class MidgetHouse {
         }
 
         private void checkMidgetExists(UUID correlationId) {
-            if (!midgetStrategy.containsKey(correlationId))
+            if (!orderStates.containsKey(correlationId))
                 throw new RuntimeException("Cannot clean midget because midget is not found");
         }
 

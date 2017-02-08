@@ -5,7 +5,7 @@ import be.cooking.model.Order;
 
 import java.util.UUID;
 
-public class OrderCooked extends MessageBase {
+public class OrderCooked extends MessageBase<Order> {
 
     private final Order order;
 
@@ -14,7 +14,13 @@ public class OrderCooked extends MessageBase {
         this.order = order;
     }
 
+    @Deprecated
     public Order getOrder() {
         return order;
+    }
+
+    @Override
+    public Order getContent() {
+        return getOrder();
     }
 }

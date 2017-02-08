@@ -1,20 +1,25 @@
 package be.cooking;
 
 import be.cooking.generic.ThreadedHandler;
-import be.cooking.model.Order;
 import be.cooking.model.actors.Waiter;
 
 public class Main {
 
-    private static final int NR_OF_ORDERS_TAKEN = 10;
 
     public static void main(String[] args) {
-        final Context context = Context.create();
-        startWorking(context.waiter);
+        int nr = getNrOfOrders(args);
+        final Context context = Context.create(nr);
+        startWorking(context.waiter,nr);
 
         waitUntilAllOrdersAreDone(context);
         printStatusReport(context);
         stopAllThreads();
+    }
+
+    private static int getNrOfOrders(String[] args) {
+        if (args.length == 1)
+            return Integer.parseInt(args[0]);
+        throw new RuntimeException("The number of orders is required");
     }
 
     private static void stopAllThreads() {
@@ -25,8 +30,8 @@ public class Main {
     private static void printStatusReport(Context context) {
         System.out.println("----------Status Report---------------------");
         context.cooks.forEach(c -> System.out.println("Cook " + c.getName() + ": " + c.getCount()));
-        System.out.println("Dropped orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DROPPED).count());
-        System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count());
+//        System.out.println("Dropped orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DROPPED).count());
+//        System.out.println("Finished orders: " + context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count());
 
     }
 
@@ -37,22 +42,19 @@ public class Main {
     }
 
     private static boolean notAllOrdersAreDone(Context context) {
-        return context.orderRepository.getList().stream().filter(e -> e.getStatus() == Order.Status.DONE).count() < NR_OF_ORDERS_TAKEN;
+        return context.orderRepository.getList().size() < context.nrOfOrders;
     }
 
-    private static void print(ThreadedHandler threadedHandler) {
-        System.out.println("Queue " + threadedHandler.getName() + " size = " + threadedHandler.size());
-    }
 
-    private static void startWorking(Waiter waiter) {
+    private static void startWorking(Waiter waiter,int nrOfOrders) {
         long start = System.currentTimeMillis();
-        takeOrders(waiter);
+        takeOrders(waiter,nrOfOrders);
         long end = System.currentTimeMillis();
-        System.out.println("Processing " + NR_OF_ORDERS_TAKEN + " took " + (end - start) / 1000 + " seconds");
+        System.out.println("Processing " + nrOfOrders + " took " + (end - start) / 1000 + " seconds");
     }
 
-    private static void takeOrders(Waiter waiter) {
-        for (int i = 0; i < NR_OF_ORDERS_TAKEN; i++)
+    private static void takeOrders(Waiter waiter,int nrOfOrders) {
+        for (int i = 0; i < nrOfOrders; i++)
             waiter.takeOrder(1);
     }
 

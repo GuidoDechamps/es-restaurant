@@ -11,6 +11,7 @@ public class Topic implements Publisher {
 
     @Override
     public <T extends MessageBase> void publish(T message) {
+        System.out.println("Publishing " + message.getClass().getSimpleName() + " for cor " + message.getCorrelationUUID());
         eventMap.addEvent(message);
 
         final List<Handler<T>> eventHandlers = eventMap.getEventHandlers(message);

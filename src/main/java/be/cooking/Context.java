@@ -14,22 +14,24 @@ class Context {
     final Topic topic = new Topic();
     final AlarmClock clock = new AlarmClock(topic);
     final ThreadedHandler threadedAlarmClock = createActor("AlarmClock", clock);
-    final MidgetHouse midgetHouse = new MidgetHouse(topic);
+    final Repository<Order> orderRepository = new Repository<>();
+    final MidgetHouse midgetHouse = new MidgetHouse(topic, orderRepository);
     final ThreadedHandler orderPrinter = createActor("Printer", new OrderPrinter());
     final Cashier cashier = new Cashier(topic);
     final ThreadedHandler threadCashier = createActor("MoneyMan", cashier);
-    final ThreadedHandler manager = createActor("Manager", new Manager(topic));
 
+    final ThreadedHandler manager = createActor("Manager", new Manager(topic));
     final Cook cookKoen = new Cook(topic, "Koen", 350);
     final TTLChecker ttlCookKoen = new TTLChecker(cookKoen);
-    final ThreadedHandler koen = createActor("Cook Koen", ttlCookKoen);
 
+    final ThreadedHandler koen = createActor("Cook Koen", ttlCookKoen);
     final Cook cookGuido = new Cook(topic, "Guido", 200);
     final TTLChecker ttlCookGuido = new TTLChecker(cookGuido);
-    final ThreadedHandler guido = createActor("Cook Guido", ttlCookGuido);
 
+    final ThreadedHandler guido = createActor("Cook Guido", ttlCookGuido);
     final Cook cookGreg = new Cook(topic, "Greg", 600);
     final TTLChecker ttlCookGreg = new TTLChecker(cookGreg);
+
     final ThreadedHandler greg = createActor("Cook Greg", ttlCookGreg);
 
     final MoreFair cookers = MoreFair.newBuilder()
@@ -37,23 +39,24 @@ class Context {
             .withHandler(guido)
             .withHandler(greg)
             .build();
-
-    final Repository<Order> orderRepository = new Repository<>();
     final ThreadedHandler bobTheDistributer = new ThreadedHandler("HandlerBob", cookers);
 
-    final Waiter waiter = new Waiter(topic, orderRepository);
+    final Waiter waiter = new Waiter(topic);
     final List<ThreadedHandler> threadedHandlers = Arrays.asList(orderPrinter, threadCashier, manager, bobTheDistributer, koen, greg, guido, threadedAlarmClock);
     final List<Cook> cooks = Arrays.asList(cookGreg, cookGuido, cookKoen);
+    final int nrOfOrders;
 
-    private Context() {
+    private Context(int nrOfOrders) {
+        this.nrOfOrders = nrOfOrders;
     }
 
-    public static Context create() {
-        final Context context = new Context();
+    public static Context create(int nr) {
+        final Context context = new Context(nr);
         context.wire();
         startThreadHandlers(context);
         return context;
     }
+
 
     private static void startThreadHandlers(Context context) {
         context.threadedHandlers.forEach(ThreadedHandler::start);

@@ -25,18 +25,6 @@ public class Cook implements Handler<CookFood> {
     }
 
     public void handle(CookFood command) {
-        if (command.getOrder().isDropped())
-            System.out.println("The order is dropped. Not cooking");
-        else {
-            if (command.getOrder().isDone())
-                System.out.println("The order is done. Not cooking");
-            else {
-                cook(command);
-            }
-        }
-    }
-
-    private void cook(CookFood command) {
         Order order = cook(command.getOrder());
         publisher.publish(new OrderCooked(order, command.getCorrelationUUID(), command.getMessageUUID()));
     }
@@ -48,7 +36,6 @@ public class Cook implements Handler<CookFood> {
 
         Sleep.sleep(cookTime);
         System.out.println(name + " is done cooking");
-        order.cooked();
         return order;
     }
 
